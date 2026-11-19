@@ -34,7 +34,13 @@ export function Auth({ register = false }: { register?: boolean }) {
 
    if (register) { await request('register', { username: String(form.get('username')).trim(), email, password, acceptedTerms: form.get('terms') === 'on' }); navigate('/iniciar-sesion', { state: { registered: true } }); setMessage('Cuenta creada. Ya puedes iniciar sesión.'); }
 
-   else { await request('login', { email, password, client: 'web', remember }); navigate('/inicio'); }
+   else {
+    const res = await request<{ user: User; accessToken?: string }>('login', { email, password, remember });
+    if (res?.accessToken) {
+      localStorage.setItem('token', res.accessToken);
+    }
+    navigate('/inicio');
+   }
 
   } catch (error) { setMessage((error as Error).message); } finally { setBusy(false); }
 
@@ -76,6 +82,6 @@ export function Home() {
  const [user, setUser] = useState<User | null>(null); const [error, setError] = useState('');
  const navigate = useNavigate();
  useEffect(()=>{let active=true;request<User>('me').then(value=>{if(active)setUser(value);}).catch(e=>{if(active){if(e instanceof ApiError && e.status===401)navigate('/iniciar-sesion',{replace:true});else setError(e.message);}});return()=>{active=false;};},[navigate]);
- async function logout() { try { await request('logout', {}); navigate('/iniciar-sesion', {replace:true}); } catch(e) {setError((e as Error).message);} }
+ async function logout() { try { await request('logout', {}); } catch(e) {setError((e as Error).message);} finally { localStorage.removeItem('token'); navigate('/iniciar-sesion', {replace:true}); } }
  return <main className="access-page"><section className="access-card"><AudioLines/><h1>{user ? 'Sesión iniciada' : 'Comprobando sesión…'}</h1><p>Bienvenido{user ? ', ' + user.username : ''}. Tu espacio musical estará disponible en el próximo sprint.</p><p role="status">{error}</p><button className="button primary" onClick={()=>{void logout();}}>Cerrar sesión</button></section></main>;
 }
