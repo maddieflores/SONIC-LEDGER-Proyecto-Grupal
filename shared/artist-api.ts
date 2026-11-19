@@ -1,3 +1,5 @@
+import { resolveApiBase } from './api-config.js';
+
 export class ArtistApiError extends Error {
   status: number;
   constructor(message: string, status: number) {
@@ -17,7 +19,9 @@ export async function artistRequest<T>(
   try {
     const multipart =
       typeof FormData !== "undefined" && body instanceof FormData;
-    const r = await fetch(base + "/auth/" + path, {
+    const cleanBase = resolveApiBase(base).replace(/\/+$/, '');
+    const cleanPath = path.startsWith('/') ? path.slice(1) : path;
+    const r = await fetch(cleanBase + "/auth/" + cleanPath, {
       method,
       credentials: "include",
       headers: {
@@ -29,7 +33,22 @@ export async function artistRequest<T>(
         : { body: multipart ? (body as FormData) : JSON.stringify(body) }),
       signal: controller.signal,
     });
-    const data = await r.json();
+
+    const contentType = r.headers?.get('content-type') || '';
+    if (contentType.includes('text/html')) {
+      throw new ArtistApiError(
+        'El servidor devolvió HTML en lugar de JSON. Verifica la URL de la API.',
+        r.status,
+      );
+    }
+
+    let data: any = {};
+    try {
+      data = await r.json();
+    } catch {
+      throw new ArtistApiError('Respuesta no válida del servidor.', r.status);
+    }
+
     if (!r.ok)
       throw new ArtistApiError(
         Array.isArray(data.message)

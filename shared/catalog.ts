@@ -1,3 +1,5 @@
+import { resolveApiBase } from "./api-config.js";
+
 export type CatalogGenre = { id: string; nombre: string };
 export type CatalogSong = {
   source?: "LOCAL" | "AUDIUS";
@@ -32,6 +34,7 @@ export async function catalogRequest<T>(
   token?: string,
   signal?: AbortSignal,
 ): Promise<T> {
+  const cleanBase = resolveApiBase(base);
   const controller = new AbortController();
   const timer = setTimeout(() => controller.abort(), 15000);
   const abort = () => controller.abort();
@@ -39,22 +42,34 @@ export async function catalogRequest<T>(
   if (signal?.aborted) controller.abort();
   try {
     if (path.startsWith("/audius:")) {
-      const track = await audiusRequest(base, "/tracks/" + encodeURIComponent(path.slice(1)), token, signal);
-      const related = await audiusRequest(base, "/artists/" + encodeURIComponent(track.artist.id) + "/tracks?limit=12", token, signal).catch(() => ({data: []}));
+      const track = await audiusRequest(cleanBase, "/tracks/" + encodeURIComponent(path.slice(1)), token, signal);
+      const related = await audiusRequest(cleanBase, "/artists/" + encodeURIComponent(track.artist.id) + "/tracks?limit=12", token, signal).catch(() => ({data: []}));
       return {song: externalSong(track), moreByArtist: related.data.filter((t: AudiusTrack) => t.id !== track.id).map(externalSong)} as T;
     }
     if (path.startsWith("/artists/audius:")) {
       const id = path.split("/")[2].split("?")[0];
-      const a = await audiusRequest(base, "/artists/" + encodeURIComponent(id), token, signal);
-      const tracks = await audiusRequest(base, "/artists/" + encodeURIComponent(id) + "/tracks?limit=50", token, signal);
+      const a = await audiusRequest(cleanBase, "/artists/" + encodeURIComponent(id), token, signal);
+      const tracks = await audiusRequest(cleanBase, "/artists/" + encodeURIComponent(id) + "/tracks?limit=50", token, signal);
       return {artist: {id:a.id, nombre:a.name, biografia:a.bio || "", ciudad:"", pais:"", identidad:[], avatarUrl:null, coverUrl:null},songs:tracks.data.map(externalSong),total:tracks.data.length,page:1,pageSize:50,totalPages:1,latestRelease:null} as T;
     }
-    const r = await fetch(base + "/auth/catalog" + path, {
+    const r = await fetch(cleanBase + "/auth/catalog" + path, {
       credentials: "include",
       headers: token ? { Authorization: "Bearer " + token } : {},
       signal: controller.signal,
     });
-    const data = await r.json();
+    const contentType = r.headers.get("content-type") || "";
+    if (contentType.includes("text/html") && !contentType.includes("application/json")) {
+      throw new CatalogError("El servidor respondió con HTML en lugar de JSON. Verifica la conexión con la API.", r.status);
+    }
+    const text = await r.text();
+    let data: any = {};
+    if (text) {
+      try {
+        data = JSON.parse(text);
+      } catch {
+        throw new CatalogError("Respuesta no válida del servidor.", r.status);
+      }
+    }
     if (!r.ok)
       throw new CatalogError(
         Array.isArray(data.message)
@@ -68,11 +83,11 @@ export async function catalogRequest<T>(
         const offset = (Number(q.get("page") || 1) - 1) * 12;
         const term = q.get("q")?.trim();
         if (term && term.length < 2) return data as T;
-        const remote = await audiusRequest(base, term ? "/search?query=" + encodeURIComponent(term) + "&limit=12&offset=" + offset : "/trending?limit=12&offset=" + offset, token, signal);
+        const remote = await audiusRequest(cleanBase, term ? "/search?query=" + encodeURIComponent(term) + "&limit=12&offset=" + offset : "/trending?limit=12&offset=" + offset, token, signal);
         const tracks = remote.tracks || remote.data || [];
         // Búsqueda de artistas: sus pistas también forman parte de los resultados.
         const artists = remote.artists || [];
-        const byArtist = term && artists.length ? await audiusRequest(base, "/artists/" + encodeURIComponent(artists[0].id) + "/tracks?limit=6", token, signal).catch(() => ({data: []})) : {data: []};
+        const byArtist = term && artists.length ? await audiusRequest(cleanBase, "/artists/" + encodeURIComponent(artists[0].id) + "/tracks?limit=6", token, signal).catch(() => ({data: []})) : {data: []};
         const unique = new Map([...tracks, ...byArtist.data].map((t: AudiusTrack) => [t.id, externalSong(t)]));
         data.items.push(...unique.values());
         // El proveedor no comunica un total exacto: solo contamos lo recibido.
@@ -97,11 +112,12 @@ export async function catalogRequest<T>(
 export function catalogCoverUrl(base: string, reference: string | null) {
   if (!reference) return undefined;
   if (/^https?:\/\//i.test(reference)) return reference;
-  if (/^\/api\//.test(reference)) return base.replace(/\/api\/?$/, "") + reference;
+  const cleanBase = resolveApiBase(base);
+  if (/^\/api\//.test(reference)) return cleanBase.replace(/\/api\/?$/, "") + reference;
   if (/^[a-f0-9-]+\.(jpe?g|png|webp|svg)$/i.test(reference)) {
-    return base.replace(/\/api\/?$/, "") + "/images/" + reference;
+    return cleanBase.replace(/\/api\/?$/, "") + "/images/" + reference;
   }
-  return reference.startsWith("/") ? base.replace(/\/api\/?$/, "") + reference : undefined;
+  return reference.startsWith("/") ? cleanBase.replace(/\/api\/?$/, "") + reference : undefined;
 }
 export function catalogDuration(value: number | null) {
   return value === null
@@ -115,14 +131,20 @@ function externalSong(t: AudiusTrack): CatalogSong {
  return {id:t.id, source:"AUDIUS", titulo:t.title, artista:{id:t.artist.id,nombre:t.artist.name},genero:t.genre?{id:"audius:"+t.genre,nombre:t.genre}:null,duracionSegundos:t.durationSeconds,coverUrl:t.artworkUrl,descripcion:"Fuente: Audius",playable:t.isPlayable};
 }
 async function audiusRequest(base:string,path:string,token?:string,signal?:AbortSignal) {
+ const cleanBase = resolveApiBase(base);
  const controller = new AbortController();
  const abort = () => controller.abort();
  const timer = setTimeout(abort, 10000);
  signal?.addEventListener("abort", abort);
  if (signal?.aborted) abort();
  try {
-   const r = await fetch(base+"/auth/integrations/audius"+path,{credentials:"include",headers:token?{Authorization:"Bearer "+token}:{},signal:controller.signal});
+   const r = await fetch(cleanBase+"/auth/integrations/audius"+path,{credentials:"include",headers:token?{Authorization:"Bearer "+token}:{},signal:controller.signal});
+   const contentType = r.headers.get("content-type") || "";
+   if (contentType.includes("text/html") && !contentType.includes("application/json")) {
+     throw new Error("Respuesta no válida de Audius.");
+   }
+   const text = await r.text();
    if(!r.ok) throw new Error("Audius no disponible o pista restringida.");
-   return await r.json();
+   return text ? JSON.parse(text) : {};
  } finally { clearTimeout(timer); signal?.removeEventListener("abort", abort); }
 }

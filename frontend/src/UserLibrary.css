@@ -153,6 +153,8 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 16px;
   background: linear-gradient(90deg, #18092e 0%, #150935 45%, #240c49 100%);
   border: 1px solid rgba(157, 41, 237, 0.35);
   border-radius: 20px;
@@ -165,6 +167,8 @@
   display: flex;
   align-items: center;
   gap: 20px;
+  flex: 1;
+  min-width: min(100%, 280px);
 }
 
 .sl-lib-icon-box {

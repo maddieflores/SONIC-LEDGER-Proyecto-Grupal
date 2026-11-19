@@ -42,6 +42,11 @@ export async function request<T>(path: string, body?: unknown, token?: string): 
       signal: controller.signal,
     });
 
+    const contentType = response.headers?.get('content-type') || '';
+    if (contentType.includes('text/html')) {
+      throw new ApiError('El servidor devolvió HTML en lugar de JSON. Verifica la URL de la API.', response.status);
+    }
+
     const text = await response.text();
     let data: any = {};
     if (text) {

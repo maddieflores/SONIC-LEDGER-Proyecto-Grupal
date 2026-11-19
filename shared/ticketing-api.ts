@@ -1,3 +1,4 @@
+import { resolveApiBase } from './api-config.js';
 import type {
   AsignarVerificadorPayload,
   ConciertoAsignadoVerificador,
@@ -36,7 +37,7 @@ export async function ticketingRequest<T>(
   try {
     const isFormData =
       typeof FormData !== 'undefined' && body instanceof FormData;
-    const cleanBase = base.replace(/\/+$/, '');
+    const cleanBase = resolveApiBase(base).replace(/\/+$/, '');
     const cleanPath = path.startsWith('/') ? path : '/' + path;
     const url = `${cleanBase}${cleanPath}`;
 
@@ -61,7 +62,24 @@ export async function ticketingRequest<T>(
       signal: controller.signal,
     });
 
-    const data = await r.json();
+    const contentType = r.headers?.get('content-type') || '';
+    if (contentType.includes('text/html')) {
+      throw new TicketingApiError(
+        'El servidor devolvió HTML en lugar de JSON. Verifica la URL de la API.',
+        r.status,
+      );
+    }
+
+    let data: any = {};
+    try {
+      data = await r.json();
+    } catch {
+      throw new TicketingApiError(
+        'Respuesta no válida del servidor.',
+        r.status,
+      );
+    }
+
     if (!r.ok) {
       throw new TicketingApiError(
         Array.isArray(data.message)

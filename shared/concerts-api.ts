@@ -1,3 +1,4 @@
+import { resolveApiBase } from './api-config.js';
 import type {
   AddConcertArtistPayload,
   Concert,
@@ -32,7 +33,7 @@ export async function concertRequest<T>(
   try {
     const isFormData =
       typeof FormData !== 'undefined' && body instanceof FormData;
-    const cleanBase = base.replace(/\/+$/, '');
+    const cleanBase = resolveApiBase(base);
     const cleanPath = path.startsWith('/') ? path : '/' + path;
     const url = `${cleanBase}${cleanPath}`;
 
@@ -57,7 +58,19 @@ export async function concertRequest<T>(
       signal: controller.signal,
     });
 
-    const data = await r.json();
+    const contentType = r.headers.get('content-type') || '';
+    if (contentType.includes('text/html') && !contentType.includes('application/json')) {
+      throw new ConcertApiError('El servidor respondió con HTML en lugar de JSON. Verifica la conexión con la API.', r.status);
+    }
+    const text = await r.text();
+    let data: any = {};
+    if (text) {
+      try {
+        data = JSON.parse(text);
+      } catch {
+        throw new ConcertApiError('Respuesta no válida del servidor.', r.status);
+      }
+    }
     if (!r.ok) {
       throw new ConcertApiError(
         Array.isArray(data.message)

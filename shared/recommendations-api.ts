@@ -1,3 +1,4 @@
+import { resolveApiBase } from './api-config.js';
 import type { MusicRecommendationsResponse } from './recommendations';
 
 export async function fetchMusicRecommendations(
@@ -6,7 +7,8 @@ export async function fetchMusicRecommendations(
   limit = 10,
   signal?: AbortSignal,
 ): Promise<MusicRecommendationsResponse> {
-  const url = `${base.replace(/\/+$/, '')}/auth/recommendations/music?limit=${limit}`;
+  const cleanBase = resolveApiBase(base).replace(/\/+$/, '');
+  const url = `${cleanBase}/auth/recommendations/music?limit=${limit}`;
   const headers: Record<string, string> = {
     'Content-Type': 'application/json',
   };
@@ -20,6 +22,11 @@ export async function fetchMusicRecommendations(
     headers,
     signal,
   });
+
+  const contentType = response.headers?.get('content-type') || '';
+  if (contentType.includes('text/html')) {
+    throw new Error('El servidor devolvió HTML en lugar de JSON. Verifica la URL de la API.');
+  }
 
   if (!response.ok) {
     const errorBody = await response.json().catch(() => ({}));

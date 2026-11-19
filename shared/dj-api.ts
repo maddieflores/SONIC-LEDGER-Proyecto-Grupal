@@ -1,17 +1,32 @@
+import { resolveApiBase } from './api-config.js';
 import type { DjSession } from './dj';
 import type { CatalogSong } from './catalog';
 export async function djRequest<T>(base: string, path: string, token?: string, body?: unknown): Promise<T> {
   const controller = new AbortController();
   const timer = setTimeout(() => controller.abort(), 100000);
   try {
-  const response = await fetch(base + '/auth/dj' + path, {
-    method: body === undefined ? 'GET' : 'POST', credentials: 'include',
-    headers: { 'Content-Type': 'application/json', ...(token ? { Authorization: 'Bearer ' + token } : {}) },
-    body: body === undefined ? undefined : JSON.stringify(body), signal: controller.signal,
-  });
-  const data = await response.json();
-  if (!response.ok) throw new Error(Array.isArray(data.message) ? data.message.join('. ') : data.message || 'No se pudo completar la solicitud del DJ');
-  return data as T;
+    const cleanBase = resolveApiBase(base).replace(/\/+$/, '');
+    const cleanPath = path.startsWith('/') ? path : '/' + path;
+    const response = await fetch(cleanBase + '/auth/dj' + cleanPath, {
+      method: body === undefined ? 'GET' : 'POST', credentials: 'include',
+      headers: { 'Content-Type': 'application/json', ...(token ? { Authorization: 'Bearer ' + token } : {}) },
+      body: body === undefined ? undefined : JSON.stringify(body), signal: controller.signal,
+    });
+
+    const contentType = response.headers?.get('content-type') || '';
+    if (contentType.includes('text/html')) {
+      throw new Error('El servidor devolvió HTML en lugar de JSON. Verifica la URL de la API.');
+    }
+
+    let data: any = {};
+    try {
+      data = await response.json();
+    } catch {
+      throw new Error('Respuesta no válida del servidor.');
+    }
+
+    if (!response.ok) throw new Error(Array.isArray(data.message) ? data.message.join('. ') : data.message || 'No se pudo completar la solicitud del DJ');
+    return data as T;
   } finally { clearTimeout(timer); }
 }
 export function djChips(s: DjSession): string[] {

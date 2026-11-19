@@ -1,3 +1,4 @@
+import { resolveApiBase } from './api-config.js';
 import type { CatalogSong } from './catalog.js';
 import type {
   FavoriteResponse,
@@ -23,7 +24,7 @@ export async function libraryRequest<T>(
   const controller = new AbortController();
   const timeout = setTimeout(() => controller.abort(), 20000);
   try {
-    const cleanBase = base.replace(/\/+$/, '');
+    const cleanBase = resolveApiBase(base).replace(/\/+$/, '');
     const cleanPath = path.startsWith('/') ? path : '/' + path;
     const url = `${cleanBase}${cleanPath}`;
 
@@ -42,7 +43,21 @@ export async function libraryRequest<T>(
       signal: controller.signal,
     });
 
-    const data = await r.json();
+    const contentType = r.headers?.get('content-type') || '';
+    if (contentType.includes('text/html')) {
+      throw new LibraryApiError(
+        'El servidor devolvió HTML en lugar de JSON. Verifica la URL de la API.',
+        r.status,
+      );
+    }
+
+    let data: any = {};
+    try {
+      data = await r.json();
+    } catch {
+      throw new LibraryApiError('Respuesta no válida del servidor.', r.status);
+    }
+
     if (!r.ok) {
       throw new LibraryApiError(
         Array.isArray(data.message)

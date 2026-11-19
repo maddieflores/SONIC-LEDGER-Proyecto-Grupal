@@ -382,7 +382,7 @@ export function UserLibrary() {
           )}
 
           {/* Tabs switcher */}
-          <div style={{ marginTop: '24px', display: 'flex', alignItems: 'center', gap: '14px', flexWrap: 'wrap' }}>
+          <div style={{ marginTop: '24px', marginBottom: '24px', display: 'flex', alignItems: 'center', gap: '14px', flexWrap: 'wrap' }}>
             <div className="sl-lib-tabs" style={{ margin: 0, flexWrap: 'wrap' }}>
             <button
             className={`sl-lib-tab ${activeTab === 'playlists' ? 'active' : ''}`}
