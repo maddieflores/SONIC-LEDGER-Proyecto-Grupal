@@ -13,38 +13,37 @@ import { DjService } from './dj.service.js';
 import { EditDjDto, GenerateDjDto, SaveDjDto, ManualDjDto } from './dj.dto.js';
 type OwnRequest = { user: { id: string } };
 @Controller('auth/dj')
-@UseGuards(JwtGuard)
 export class DjController {
   constructor(private readonly dj: DjService) {}
   @Get('status') status() {
     return this.dj.status();
   }
-  @Get('candidates') candidates(@Req() r: OwnRequest) {
+  @Get('candidates') @UseGuards(JwtGuard) candidates(@Req() r: OwnRequest) {
     return this.dj.manualCandidates(r.user.id);
   }
-  @Post('manual') manual(@Req() r: OwnRequest, @Body() dto: ManualDjDto) {
+  @Post('manual') @UseGuards(JwtGuard) manual(@Req() r: OwnRequest, @Body() dto: ManualDjDto) {
     return this.dj.manual(r.user.id, dto.trackId);
   }
-  @Get('sessions') list(@Req() r: OwnRequest) {
+  @Get('sessions') @UseGuards(JwtGuard) list(@Req() r: OwnRequest) {
     return this.dj.list(r.user.id);
   }
-  @Get('sessions/:id') get(
+  @Get('sessions/:id') @UseGuards(JwtGuard) get(
     @Req() r: OwnRequest,
     @Param('id', ParseUUIDPipe) id: string,
   ) {
     return this.dj.get(r.user.id, id);
   }
-  @Post('sessions') generate(@Req() r: OwnRequest, @Body() dto: GenerateDjDto) {
+  @Post('sessions') @UseGuards(JwtGuard) generate(@Req() r: OwnRequest, @Body() dto: GenerateDjDto) {
     return this.dj.generate(r.user.id, dto.prompt);
   }
-  @Post('sessions/:id/adjust') edit(
+  @Post('sessions/:id/adjust') @UseGuards(JwtGuard) edit(
     @Req() r: OwnRequest,
     @Param('id', ParseUUIDPipe) id: string,
     @Body() dto: EditDjDto,
   ) {
     return this.dj.edit(r.user.id, id, dto);
   }
-  @Post('sessions/:id/playlist') save(
+  @Post('sessions/:id/playlist') @UseGuards(JwtGuard) save(
     @Req() r: OwnRequest,
     @Param('id', ParseUUIDPipe) id: string,
     @Body() dto: SaveDjDto,

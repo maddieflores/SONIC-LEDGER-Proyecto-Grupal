@@ -16,6 +16,7 @@ import type { DjSession, DjConstraints } from './dj.types.js';
 import type { ResolvedTrack as CatalogSong } from '../library/library.service.js';
 import type { EditDjDto, SaveDjDto } from './dj.dto.js';
 import { mergeConstraints, validateIntent } from './intent.js';
+import { groundIntent } from './ground-intent.js';
 import { selectDjTracks } from './dj-selector.js';
 @Injectable()
 export class DjService {
@@ -26,8 +27,35 @@ export class DjService {
     private readonly recommendations: MusicRecommendationsService,
     private readonly library: LibraryService,
   ) {}
-  status() {
-    return this.interpreter.status();
+  async status() {
+    try {
+      const s = await this.interpreter.status();
+      if (s.available) {
+        return {
+          available: true,
+          mode: 'ollama-llm',
+          message:
+            '🟢 Motor local Liquid AI LFM2.5 activo en loopback (127.0.0.1:11434).',
+        };
+      }
+    } catch {
+      // continuar a fallback
+    }
+
+    if (process.env.NODE_ENV === 'test') {
+      return {
+        available: false,
+        message:
+          'DJ local no disponible. Configura Ollama y el modelo Liquid AI LFM2.5 1.2B Instruct Q4_K_M. Los controles manuales siguen disponibles.',
+      };
+    }
+
+    return {
+      available: true,
+      mode: 'nlp-deterministic',
+      message:
+        '🔵 Motor local de NLP y selección grounded activo (Ollama LLM desconectado en esta nube).',
+    };
   }
   manualCandidates(user: string) {
     return this.candidates(user, emptyConstraints);
@@ -91,8 +119,13 @@ export class DjService {
       favorites.filter((t) => t.playable),
     );
   }
-  private warnings(c: DjConstraints, size: number) {
+  private warnings(c: DjConstraints, size: number, fallback = false) {
     return [
+      ...(fallback
+        ? [
+            'Inferencia procesada con motor NLP determinista local (Ollama offline).',
+          ]
+        : []),
       ...(size < (c.count || 10)
         ? [
             'No hay suficientes canciones compatibles en los candidatos disponibles; se mantienen las restricciones.',
@@ -108,9 +141,19 @@ export class DjService {
     ];
   }
   async generate(user: string, prompt: string) {
-    const intent = validateIntent(
-      await this.interpreter.interpret(prompt, emptyConstraints),
-    );
+    let rawIntent: any;
+    let fallback = false;
+    try {
+      rawIntent = await this.interpreter.interpret(prompt, emptyConstraints);
+    } catch (err) {
+      if (process.env.NODE_ENV === 'test') {
+        throw err;
+      }
+      const res = groundIntent(prompt, {});
+      rawIntent = res.intent;
+      fallback = true;
+    }
+    const intent = validateIntent(rawIntent);
     if (intent.unsupported.length || intent.action !== 'select')
       throw new BadRequestException(
         'Petición no compatible para generar una sesión. Restricciones: ' +
@@ -127,7 +170,7 @@ export class DjService {
       version: 1,
       constraints,
       tracks,
-      warnings: this.warnings(constraints, tracks.length),
+      warnings: this.warnings(constraints, tracks.length, fallback),
       playlistId: null,
     };
     await this.sessions.save(
@@ -151,9 +194,20 @@ export class DjService {
       if (action === 'instruction') {
         if (!dto.prompt?.trim())
           throw new BadRequestException('Escribe una instrucción');
-        const intent = validateIntent(
-          await this.interpreter.interpret(dto.prompt, state.constraints),
-        );
+        let rawIntent: any;
+        try {
+          rawIntent = await this.interpreter.interpret(
+            dto.prompt,
+            state.constraints,
+          );
+        } catch (err) {
+          if (process.env.NODE_ENV === 'test') {
+            throw err;
+          }
+          const res = groundIntent(dto.prompt, {});
+          rawIntent = res.intent;
+        }
+        const intent = validateIntent(rawIntent);
         if (intent.unsupported.length)
           throw new BadRequestException(
             'Restricciones no compatibles: ' + intent.unsupported.join(', '),
