@@ -26,3 +26,21 @@ export function resolveApiBase(base?: string): string {
   }
   return url;
 }
+
+/**
+ * Resuelve el token de autenticación para peticiones a la API.
+ * Si se pasa explícitamente se respeta.
+ * Si no, en entorno de navegador intenta obtenerlo de localStorage ('token').
+ */
+export function resolveAuthToken(token?: string): string | undefined {
+  if (token) return token;
+  try {
+    if (typeof localStorage !== 'undefined' && localStorage && typeof localStorage.getItem === 'function') {
+      const stored = localStorage.getItem('token');
+      return stored || undefined;
+    }
+  } catch {
+    // Entorno no accesible o seguro
+  }
+  return undefined;
+}

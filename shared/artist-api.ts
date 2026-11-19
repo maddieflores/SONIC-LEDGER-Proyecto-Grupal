@@ -1,4 +1,4 @@
-import { resolveApiBase } from './api-config.js';
+import { resolveApiBase, resolveAuthToken } from './api-config.js';
 
 export class ArtistApiError extends Error {
   status: number;
@@ -21,12 +21,13 @@ export async function artistRequest<T>(
       typeof FormData !== "undefined" && body instanceof FormData;
     const cleanBase = resolveApiBase(base).replace(/\/+$/, '');
     const cleanPath = path.startsWith('/') ? path.slice(1) : path;
+    const activeToken = resolveAuthToken(token);
     const r = await fetch(cleanBase + "/auth/" + cleanPath, {
       method,
       credentials: "include",
       headers: {
         ...(multipart ? {} : { "Content-Type": "application/json" }),
-        ...(token ? { Authorization: "Bearer " + token } : {}),
+        ...(activeToken ? { Authorization: "Bearer " + activeToken } : {}),
       },
       ...(body === undefined
         ? {}

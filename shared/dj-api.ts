@@ -1,4 +1,4 @@
-import { resolveApiBase } from './api-config.js';
+import { resolveApiBase, resolveAuthToken } from './api-config.js';
 import type { DjSession } from './dj';
 import type { CatalogSong } from './catalog';
 export async function djRequest<T>(base: string, path: string, token?: string, body?: unknown): Promise<T> {
@@ -7,9 +7,10 @@ export async function djRequest<T>(base: string, path: string, token?: string, b
   try {
     const cleanBase = resolveApiBase(base).replace(/\/+$/, '');
     const cleanPath = path.startsWith('/') ? path : '/' + path;
+    const activeToken = resolveAuthToken(token);
     const response = await fetch(cleanBase + '/auth/dj' + cleanPath, {
       method: body === undefined ? 'GET' : 'POST', credentials: 'include',
-      headers: { 'Content-Type': 'application/json', ...(token ? { Authorization: 'Bearer ' + token } : {}) },
+      headers: { 'Content-Type': 'application/json', ...(activeToken ? { Authorization: 'Bearer ' + activeToken } : {}) },
       body: body === undefined ? undefined : JSON.stringify(body), signal: controller.signal,
     });
 

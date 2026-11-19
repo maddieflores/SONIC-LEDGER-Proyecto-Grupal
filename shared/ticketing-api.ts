@@ -1,4 +1,4 @@
-import { resolveApiBase } from './api-config.js';
+import { resolveApiBase, resolveAuthToken } from './api-config.js';
 import type {
   AsignarVerificadorPayload,
   ConciertoAsignadoVerificador,
@@ -40,13 +40,14 @@ export async function ticketingRequest<T>(
     const cleanBase = resolveApiBase(base).replace(/\/+$/, '');
     const cleanPath = path.startsWith('/') ? path : '/' + path;
     const url = `${cleanBase}${cleanPath}`;
+    const activeToken = resolveAuthToken(token);
 
     const headers: Record<string, string> = {};
     if (!isFormData) {
       headers['Content-Type'] = 'application/json';
     }
-    if (token) {
-      headers['Authorization'] = `Bearer ${token}`;
+    if (activeToken) {
+      headers['Authorization'] = `Bearer ${activeToken}`;
     }
 
     const r = await fetch(url, {

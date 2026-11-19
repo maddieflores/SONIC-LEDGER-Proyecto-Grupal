@@ -1,4 +1,4 @@
-import { resolveApiBase } from './api-config.js';
+import { resolveApiBase, resolveAuthToken } from './api-config.js';
 import type {
   AddConcertArtistPayload,
   Concert,
@@ -36,13 +36,14 @@ export async function concertRequest<T>(
     const cleanBase = resolveApiBase(base);
     const cleanPath = path.startsWith('/') ? path : '/' + path;
     const url = `${cleanBase}${cleanPath}`;
+    const activeToken = resolveAuthToken(token);
 
     const headers: Record<string, string> = {};
     if (!isFormData) {
       headers['Content-Type'] = 'application/json';
     }
-    if (token) {
-      headers['Authorization'] = `Bearer ${token}`;
+    if (activeToken) {
+      headers['Authorization'] = `Bearer ${activeToken}`;
     }
 
     const r = await fetch(url, {

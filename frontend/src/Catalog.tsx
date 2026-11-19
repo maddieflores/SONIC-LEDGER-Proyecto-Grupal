@@ -357,7 +357,8 @@ function RecommendedSection() {
 
   useEffect(() => {
     let active = true;
-    void fetchMusicRecommendations(base, undefined, 10)
+    const token = typeof localStorage !== 'undefined' ? localStorage.getItem('token') ?? undefined : undefined;
+    void fetchMusicRecommendations(base, token, 10)
       .then((res) => {
         if (active) {
           setData(res);
@@ -524,28 +525,32 @@ export function Catalog() {
   const [favoriteMap, setFavoriteMap] = useState<Record<string, boolean>>({});
 
   useEffect(() => {
-    void fetchUserPlaylists(base).then(setUserPlaylists).catch(() => {});
+    const token = typeof localStorage !== 'undefined' ? localStorage.getItem('token') ?? undefined : undefined;
+    void fetchUserPlaylists(base, token).then(setUserPlaylists).catch(() => {});
   }, []);
 
   useEffect(() => {
     if (!data?.items?.length) return;
+    const token = typeof localStorage !== 'undefined' ? localStorage.getItem('token') ?? undefined : undefined;
     const ids = data.items.map((s) => s.id);
-    void checkFavorites(base, ids).then(setFavoriteMap).catch(() => {});
+    void checkFavorites(base, ids, token).then(setFavoriteMap).catch(() => {});
   }, [data]);
   useEffect(() => {
     const controller = new AbortController();
+    const token = typeof localStorage !== 'undefined' ? localStorage.getItem('token') ?? undefined : undefined;
     void catalogRequest<CatalogGenre[]>(
       base,
       "/genres",
-      undefined,
+      token,
       controller.signal,
     )
       .then(setGenres)
       .catch((e) => {
         if (controller.signal.aborted) return;
-        if (e instanceof CatalogError && e.status === 401)
+        if (e instanceof CatalogError && e.status === 401) {
+          if (typeof localStorage !== 'undefined') localStorage.removeItem('token');
           navigate("/iniciar-sesion", { replace: true });
-        else setError(e.message);
+        } else setError(e.message);
       });
     return () => controller.abort();
   }, [navigate, retry]);
@@ -558,13 +563,14 @@ export function Catalog() {
       }
     });
     const timer = setTimeout(() => {
+      const token = typeof localStorage !== 'undefined' ? localStorage.getItem('token') ?? undefined : undefined;
       const query = new URLSearchParams({ page, pageSize: "12" });
       if (q.trim()) query.set("q", q.trim());
       if (genre) query.set("generoId", genre);
       void catalogRequest<CatalogPage>(
         base,
         "?" + query,
-        undefined,
+        token,
         controller.signal,
       )
         .then((value) => {
@@ -572,9 +578,10 @@ export function Catalog() {
         })
         .catch((e) => {
           if (controller.signal.aborted) return;
-          if (e instanceof CatalogError && e.status === 401)
+          if (e instanceof CatalogError && e.status === 401) {
+            if (typeof localStorage !== 'undefined') localStorage.removeItem('token');
             navigate("/iniciar-sesion", { replace: true });
-          else setError(e.message);
+          } else setError(e.message);
         });
     }, 250);
     return () => {
@@ -724,10 +731,11 @@ export function SongDetail() {
         setError("");
       }
     });
+    const token = typeof localStorage !== 'undefined' ? localStorage.getItem('token') ?? undefined : undefined;
     void catalogRequest<CatalogDetail>(
       base,
       "/" + encodeURIComponent(id ?? ""),
-      undefined,
+      token,
       controller.signal,
     )
       .then((value) => {
@@ -735,9 +743,10 @@ export function SongDetail() {
       })
       .catch((e) => {
         if (controller.signal.aborted) return;
-        if (e instanceof CatalogError && e.status === 401)
+        if (e instanceof CatalogError && e.status === 401) {
+          if (typeof localStorage !== 'undefined') localStorage.removeItem('token');
           navigate("/iniciar-sesion", { replace: true });
-        else
+        } else
           setError(
             e instanceof CatalogError && e.status === 404
               ? "La canción ya no está disponible o no existe."

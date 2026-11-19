@@ -1,4 +1,4 @@
-import { resolveApiBase } from "./api-config.js";
+import { resolveApiBase, resolveAuthToken } from "./api-config.js";
 import type { CatalogSong } from "./catalog";
 export type RepeatMode = "none" | "all" | "one";
 export function cycleRepeat(mode: RepeatMode): RepeatMode {
@@ -42,7 +42,7 @@ export function publishedAudioUrl(base: string, id: string, ticket?: string) {
 }
 
 export async function fetchStreamTicket(base: string, trackId: string, token?: string): Promise<string | null> {
-  const activeToken = token ?? (typeof localStorage !== 'undefined' ? localStorage.getItem('token') ?? undefined : undefined);
+  const activeToken = resolveAuthToken(token);
   if (!activeToken) return null;
   try {
     const cleanBase = resolveApiBase(base).replace(/\/+$/, '');

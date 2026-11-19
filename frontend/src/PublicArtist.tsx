@@ -39,10 +39,11 @@ export function PublicArtistPage() {
     [query, setQuery] = useState("");
   useEffect(() => {
     const controller = new AbortController();
+    const token = typeof localStorage !== 'undefined' ? localStorage.getItem('token') ?? undefined : undefined;
     void catalogRequest<PublicArtist>(
       base,
       "/artists/" + id + "?page=" + page + "&pageSize=20",
-      undefined,
+      token,
       controller.signal,
     )
       .then((value) => {
@@ -50,9 +51,10 @@ export function PublicArtistPage() {
       })
       .catch((e) => {
         if (controller.signal.aborted) return;
-        if (e instanceof CatalogError && e.status === 401)
+        if (e instanceof CatalogError && e.status === 401) {
+          if (typeof localStorage !== 'undefined') localStorage.removeItem('token');
           navigate("/iniciar-sesion", { replace: true });
-        else setError(e.message);
+        } else setError(e.message);
       });
     return () => controller.abort();
   }, [id, page, navigate]);

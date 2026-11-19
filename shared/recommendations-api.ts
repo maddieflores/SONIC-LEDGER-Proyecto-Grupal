@@ -1,4 +1,4 @@
-import { resolveApiBase } from './api-config.js';
+import { resolveApiBase, resolveAuthToken } from './api-config.js';
 import type { MusicRecommendationsResponse } from './recommendations';
 
 export async function fetchMusicRecommendations(
@@ -9,11 +9,12 @@ export async function fetchMusicRecommendations(
 ): Promise<MusicRecommendationsResponse> {
   const cleanBase = resolveApiBase(base).replace(/\/+$/, '');
   const url = `${cleanBase}/auth/recommendations/music?limit=${limit}`;
+  const activeToken = resolveAuthToken(token);
   const headers: Record<string, string> = {
     'Content-Type': 'application/json',
   };
-  if (token) {
-    headers['Authorization'] = `Bearer ${token}`;
+  if (activeToken) {
+    headers['Authorization'] = `Bearer ${activeToken}`;
   }
 
   const response = await fetch(url, {
