@@ -84,11 +84,11 @@ export async function catalogRequest<T>(
         const offset = (Number(q.get("page") || 1) - 1) * 12;
         const term = q.get("q")?.trim();
         if (term && term.length < 2) return data as T;
-        const remote = await audiusRequest(cleanBase, term ? "/search?query=" + encodeURIComponent(term) + "&limit=12&offset=" + offset : "/trending?limit=12&offset=" + offset, token, signal);
+        const remote = await audiusRequest(cleanBase, term ? "/search?query=" + encodeURIComponent(term) + "&limit=12&offset=" + offset : "/trending?limit=12&offset=" + offset, activeToken, signal);
         const tracks = remote.tracks || remote.data || [];
         // Búsqueda de artistas: sus pistas también forman parte de los resultados.
         const artists = remote.artists || [];
-        const byArtist = term && artists.length ? await audiusRequest(cleanBase, "/artists/" + encodeURIComponent(artists[0].id) + "/tracks?limit=6", token, signal).catch(() => ({data: []})) : {data: []};
+        const byArtist = term && artists.length ? await audiusRequest(cleanBase, "/artists/" + encodeURIComponent(artists[0].id) + "/tracks?limit=6", activeToken, signal).catch(() => ({data: []})) : {data: []};
         const unique = new Map([...tracks, ...byArtist.data].map((t: AudiusTrack) => [t.id, externalSong(t)]));
         data.items.push(...unique.values());
         // El proveedor no comunica un total exacto: solo contamos lo recibido.

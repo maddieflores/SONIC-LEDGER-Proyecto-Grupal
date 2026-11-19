@@ -26,7 +26,12 @@ export async function djRequest<T>(base: string, path: string, token?: string, b
       throw new Error('Respuesta no válida del servidor.');
     }
 
-    if (!response.ok) throw new Error(Array.isArray(data.message) ? data.message.join('. ') : data.message || 'No se pudo completar la solicitud del DJ');
+    if (!response.ok) {
+      if (response.status === 401) {
+        throw new Error('No autorizado. Tu sesión ha expirado o no has iniciado sesión.');
+      }
+      throw new Error(Array.isArray(data.message) ? data.message.join('. ') : data.message || 'No se pudo completar la solicitud del DJ');
+    }
     return data as T;
   } finally { clearTimeout(timer); }
 }

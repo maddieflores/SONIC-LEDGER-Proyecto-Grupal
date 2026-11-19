@@ -51,13 +51,14 @@ export function PublicArtistPage() {
       })
       .catch((e) => {
         if (controller.signal.aborted) return;
-        if (e instanceof CatalogError && e.status === 401) {
-          if (typeof localStorage !== 'undefined') localStorage.removeItem('token');
-          navigate("/iniciar-sesion", { replace: true });
-        } else setError(e.message);
+        setError(
+          e instanceof CatalogError && e.status === 401
+            ? "Inicia sesión para ver el perfil completo del artista."
+            : e.message || "No se pudo cargar el artista.",
+        );
       });
     return () => controller.abort();
-  }, [id, page, navigate]);
+  }, [id, page]);
   const first = data?.songs.find((s) => s.playable !== false);
   return (
     <div className="public-artist-page">

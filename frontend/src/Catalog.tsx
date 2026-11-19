@@ -2,7 +2,6 @@ import { usePlayback } from "./PlaybackContext";
 import { useEffect, useRef, useState } from "react";
 import {
   Link,
-  useNavigate,
   useParams,
   useSearchParams,
 } from "react-router-dom";
@@ -511,7 +510,6 @@ function RecommendedSection() {
 
 export function Catalog() {
   const [params, setParams] = useSearchParams(),
-    navigate = useNavigate(),
     input = useRef<HTMLInputElement>(null);
   const q = params.get("q") ?? "",
     genre = params.get("generoId") ?? "",
@@ -545,15 +543,12 @@ export function Catalog() {
       controller.signal,
     )
       .then(setGenres)
-      .catch((e) => {
-        if (controller.signal.aborted) return;
-        if (e instanceof CatalogError && e.status === 401) {
-          if (typeof localStorage !== 'undefined') localStorage.removeItem('token');
-          navigate("/iniciar-sesion", { replace: true });
-        } else setError(e.message);
+      .catch(() => {
+        // Si no hay géneros disponibles o no hay sesión, continuar con catálogo general
+        setGenres([]);
       });
     return () => controller.abort();
-  }, [navigate, retry]);
+  }, [retry]);
   useEffect(() => {
     const controller = new AbortController();
     void Promise.resolve().then(() => {
@@ -578,17 +573,18 @@ export function Catalog() {
         })
         .catch((e) => {
           if (controller.signal.aborted) return;
-          if (e instanceof CatalogError && e.status === 401) {
-            if (typeof localStorage !== 'undefined') localStorage.removeItem('token');
-            navigate("/iniciar-sesion", { replace: true });
-          } else setError(e.message);
+          setError(
+            e instanceof CatalogError && e.status === 401
+              ? "Inicia sesión para explorar todas las canciones del catálogo."
+              : e.message || "No se pudo cargar el catálogo de canciones."
+          );
         });
     }, 250);
     return () => {
       clearTimeout(timer);
       controller.abort();
     };
-  }, [q, genre, page, retry, navigate]);
+  }, [q, genre, page, retry]);
   function change(key: string, value: string) {
     const next = new URLSearchParams(params);
     if (value) next.set(key, value);
@@ -690,8 +686,7 @@ export function Catalog() {
 }
 export function SongDetail() {
   const playback = usePlayback();
-  const { id } = useParams(),
-    navigate = useNavigate();
+  const { id } = useParams();
   const [data, setData] = useState<CatalogDetail | null>(null),
     [error, setError] = useState(""),
     [retry, setRetry] = useState(0);
@@ -743,18 +738,16 @@ export function SongDetail() {
       })
       .catch((e) => {
         if (controller.signal.aborted) return;
-        if (e instanceof CatalogError && e.status === 401) {
-          if (typeof localStorage !== 'undefined') localStorage.removeItem('token');
-          navigate("/iniciar-sesion", { replace: true });
-        } else
-          setError(
-            e instanceof CatalogError && e.status === 404
-              ? "La canción ya no está disponible o no existe."
-              : e.message,
-          );
+        setError(
+          e instanceof CatalogError && e.status === 404
+            ? "La canción ya no está disponible o no existe."
+            : e instanceof CatalogError && e.status === 401
+              ? "Inicia sesión para ver los detalles de esta canción."
+              : e.message || "No se pudo cargar la canción.",
+        );
       });
     return () => controller.abort();
-  }, [id, retry, navigate]);
+  }, [id, retry]);
   return (
     <CatalogLayout>
       <Link className="catalog-back" to="/explorar">
