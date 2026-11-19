@@ -1,0 +1,868 @@
+/* SONIC LEDGER — DASHBOARD WEB STYLES
+   Exact aesthetic: Deep black #080511, violet #9d29ed, magenta #ff24e6 / #d414a8,
+   neon cyan #00f0ff, borders rgba(140, 70, 200, 0.35), dark containers */
+
+.sl-dash-page {
+  display: flex;
+  min-height: 100vh;
+  background-color: #080511;
+  color: #ffffff;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  overflow-x: hidden;
+  position: relative;
+}
+
+/* Background ambient glows matching reference */
+.sl-dash-page::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  right: 0;
+  width: 600px;
+  height: 600px;
+  background: radial-gradient(circle, rgba(157, 41, 237, 0.12) 0%, rgba(8, 5, 17, 0) 70%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.sl-dash-page::after {
+  content: '';
+  position: fixed;
+  bottom: 0;
+  left: 200px;
+  width: 500px;
+  height: 500px;
+  background: radial-gradient(circle, rgba(255, 36, 230, 0.08) 0%, rgba(8, 5, 17, 0) 70%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.sl-dash-main {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  padding: 18px 36px 90px 36px;
+  position: relative;
+  z-index: 1;
+  max-width: 1500px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+/* -------------------------------------------------------------
+   HEADER
+   ------------------------------------------------------------- */
+.sl-dash-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  margin-bottom: 20px;
+}
+
+.sl-dash-search {
+  display: flex;
+  align-items: center;
+  background: rgba(22, 14, 38, 0.75);
+  border: 1px solid rgba(140, 80, 185, 0.4);
+  border-radius: 9999px;
+  padding: 10px 18px;
+  gap: 12px;
+  width: 100%;
+  max-width: 440px;
+  transition: all 0.25s ease;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+}
+
+.sl-dash-search:focus-within {
+  border-color: #b63dff;
+  box-shadow: 0 0 16px rgba(182, 61, 255, 0.45);
+  background: rgba(30, 18, 52, 0.9);
+}
+
+.sl-dash-search-icon {
+  color: #a394b8;
+  flex-shrink: 0;
+}
+
+.sl-dash-search input {
+  background: transparent;
+  border: none;
+  outline: none;
+  color: #ffffff;
+  font-size: 13.5px;
+  width: 100%;
+}
+
+.sl-dash-search input::placeholder {
+  color: #8c7e9f;
+}
+
+.sl-dash-header-tools {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+}
+
+.sl-dash-icon-btn {
+  background: rgba(25, 16, 43, 0.8);
+  border: 1px solid rgba(140, 80, 185, 0.35);
+  border-radius: 50%;
+  width: 42px;
+  height: 42px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #e2d9f3;
+  cursor: pointer;
+  position: relative;
+  transition: all 0.2s ease;
+}
+
+.sl-dash-icon-btn:hover {
+  border-color: #b63dff;
+  color: #ffffff;
+  box-shadow: 0 0 12px rgba(182, 61, 255, 0.4);
+  transform: translateY(-1px);
+}
+
+.sl-dash-notif-dot {
+  position: absolute;
+  top: 9px;
+  right: 10px;
+  width: 7px;
+  height: 7px;
+  background-color: #ff2a85;
+  border-radius: 50%;
+  box-shadow: 0 0 8px #ff2a85;
+}
+
+.sl-dash-header-avatar {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  border: 2px solid #b63dff;
+  box-shadow: 0 0 14px rgba(212, 20, 168, 0.6);
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #441166, #ff24e6);
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  text-decoration: none;
+}
+
+.sl-dash-header-avatar:hover {
+  transform: scale(1.05);
+  box-shadow: 0 0 20px rgba(255, 36, 230, 0.8);
+}
+
+.sl-dash-header-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.sl-dash-avatar-text {
+  font-weight: 700;
+  font-size: 15px;
+  color: #ffffff;
+}
+
+/* -------------------------------------------------------------
+   GREETING
+   ------------------------------------------------------------- */
+.sl-dash-greeting {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 22px;
+  padding: 4px 0;
+  position: relative;
+}
+
+.sl-dash-greet-left {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.sl-dash-greet-avatar {
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  border: 2px solid #00f0ff;
+  box-shadow: 0 0 16px rgba(0, 240, 255, 0.45), 0 0 24px rgba(182, 61, 255, 0.35);
+  overflow: hidden;
+  background: linear-gradient(135deg, #1f0b35, #551480);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.sl-dash-greet-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.sl-dash-greet-info h1 {
+  font-size: 25px;
+  font-weight: 800;
+  color: #ffffff;
+  margin: 0 0 3px 0;
+  letter-spacing: -0.02em;
+}
+
+.sl-dash-greet-info p {
+  font-size: 13.5px;
+  color: #baaec9;
+  margin: 0;
+}
+
+.sl-dash-greet-waves {
+  flex-shrink: 0;
+  width: 280px;
+  height: 55px;
+  opacity: 0.9;
+  pointer-events: none;
+}
+
+/* -------------------------------------------------------------
+   BANNER: DISCOVER WEEKLY
+   ------------------------------------------------------------- */
+.sl-dash-banner {
+  width: 100%;
+  min-height: 190px;
+  border-radius: 20px;
+  background: linear-gradient(105deg, #240c3d 0%, #300c42 35%, #180931 70%, #0d122e 100%);
+  border: 1px solid rgba(182, 61, 255, 0.45);
+  box-shadow: 0 12px 36px rgba(0, 0, 0, 0.5), inset 0 0 24px rgba(182, 61, 255, 0.18), 0 0 24px rgba(182, 61, 255, 0.15);
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 24px 34px;
+  margin-bottom: 28px;
+}
+
+/* Banner ambient glow overlay */
+.sl-dash-banner::before {
+  content: '';
+  position: absolute;
+  top: -40%;
+  left: 20%;
+  width: 350px;
+  height: 350px;
+  background: radial-gradient(circle, rgba(255, 36, 230, 0.25) 0%, rgba(0,0,0,0) 70%);
+  pointer-events: none;
+}
+
+.sl-dash-banner-content {
+  position: relative;
+  z-index: 2;
+  max-width: 520px;
+}
+
+.sl-dash-banner-tag {
+  display: inline-block;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  color: #cca4f5;
+  text-transform: uppercase;
+  margin-bottom: 6px;
+}
+
+.sl-dash-banner-title {
+  font-size: 32px;
+  font-weight: 800;
+  color: #ffffff;
+  margin: 0 0 4px 0;
+  letter-spacing: -0.02em;
+  text-shadow: 0 2px 14px rgba(0, 0, 0, 0.5);
+}
+
+.sl-dash-banner-sub {
+  font-size: 14px;
+  color: #cfc2df;
+  margin: 0 0 20px 0;
+}
+
+.sl-dash-banner-actions {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.sl-dash-banner-play-btn {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  background: linear-gradient(90deg, #ff24e6 0%, #9d29ed 60%, #16b9ff 100%);
+  border: none;
+  border-radius: 9999px;
+  padding: 10px 24px;
+  color: #ffffff;
+  font-size: 13.5px;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: 0 4px 18px rgba(255, 36, 230, 0.45);
+  transition: all 0.25s ease;
+}
+
+.sl-dash-banner-play-btn:hover {
+  transform: translateY(-2px) scale(1.02);
+  box-shadow: 0 6px 26px rgba(255, 36, 230, 0.65);
+}
+
+.sl-dash-banner-play-btn:active {
+  transform: translateY(0);
+}
+
+.sl-dash-banner-fav-btn {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #ffffff;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.sl-dash-banner-fav-btn:hover {
+  background: rgba(255, 255, 255, 0.16);
+  border-color: #ff24e6;
+  box-shadow: 0 0 14px rgba(255, 36, 230, 0.45);
+}
+
+.sl-dash-banner-art-wrap {
+  position: absolute;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  width: 46%;
+  max-width: 480px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  pointer-events: none;
+}
+
+.sl-dash-banner-art {
+  height: 100%;
+  width: auto;
+  object-fit: cover;
+  object-position: center right;
+  mask-image: linear-gradient(to right, transparent 0%, black 25%);
+  -webkit-mask-image: linear-gradient(to right, transparent 0%, black 25%);
+}
+
+.sl-dash-banner-dots {
+  position: absolute;
+  right: 28px;
+  bottom: 14px;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  z-index: 3;
+}
+
+.sl-dash-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.35);
+  transition: all 0.2s ease;
+}
+
+.sl-dash-dot.active {
+  width: 18px;
+  border-radius: 999px;
+  background: #ffffff;
+  box-shadow: 0 0 10px rgba(255, 255, 255, 0.8);
+}
+
+/* -------------------------------------------------------------
+   SECTIONS: HEADINGS & LINKS
+   ------------------------------------------------------------- */
+.sl-dash-section-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 14px;
+}
+
+.sl-dash-section-header h3 {
+  font-size: 17px;
+  font-weight: 700;
+  color: #ffffff;
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.sl-dash-see-all {
+  font-size: 12.5px;
+  font-weight: 500;
+  color: #cbb4de;
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  transition: color 0.2s ease, transform 0.2s ease;
+}
+
+.sl-dash-see-all:hover {
+  color: #ffffff;
+  transform: translateX(2px);
+}
+
+/* -------------------------------------------------------------
+   ROW 1: THREE COLUMNS
+   Popular (carousels), Hot & Trending (box), Nuevos lanzamientos (carousels)
+   ------------------------------------------------------------- */
+.sl-dash-row-1 {
+  display: grid;
+  grid-template-columns: 1.45fr 1.05fr 1.05fr;
+  gap: 22px;
+  margin-bottom: 30px;
+  align-items: start;
+}
+
+/* CAROUSEL WRAPPER */
+.sl-dash-carousel-outer {
+  position: relative;
+  width: 100%;
+}
+
+.sl-dash-carousel {
+  display: flex;
+  gap: 12px;
+  overflow-x: auto;
+  scroll-behavior: smooth;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  padding: 4px 2px 10px 2px;
+}
+
+.sl-dash-carousel::-webkit-scrollbar {
+  display: none;
+}
+
+.sl-dash-carousel-arrow {
+  position: absolute;
+  top: 42%;
+  transform: translateY(-50%);
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background: rgba(14, 9, 24, 0.85);
+  border: 1px solid rgba(182, 61, 255, 0.45);
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 5;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+  transition: all 0.2s ease;
+}
+
+.sl-dash-carousel-arrow:hover {
+  background: rgba(45, 20, 75, 0.95);
+  border-color: #ff24e6;
+  box-shadow: 0 0 12px rgba(255, 36, 230, 0.6);
+}
+
+.sl-dash-carousel-arrow.left {
+  left: -8px;
+}
+
+.sl-dash-carousel-arrow.right {
+  right: -8px;
+}
+
+/* POPULAR MUSIC CARDS */
+.sl-dash-music-card {
+  flex: 0 0 118px;
+  width: 118px;
+  display: flex;
+  flex-direction: column;
+  cursor: pointer;
+  transition: transform 0.25s ease;
+}
+
+.sl-dash-music-card:hover {
+  transform: translateY(-4px);
+}
+
+.sl-dash-cover-box {
+  width: 118px;
+  height: 118px;
+  border-radius: 12px;
+  overflow: hidden;
+  position: relative;
+  background: #191026;
+  border: 1px solid rgba(140, 80, 185, 0.25);
+  margin-bottom: 8px;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.4);
+}
+
+.sl-dash-cover-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+}
+
+.sl-dash-music-card:hover .sl-dash-cover-img {
+  transform: scale(1.05);
+}
+
+.sl-dash-cover-fallback {
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, #2b1142, #110920);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #8c7e9f;
+}
+
+.sl-dash-card-info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.sl-dash-card-title {
+  font-size: 12.5px;
+  font-weight: 700;
+  color: #ffffff;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.sl-dash-card-artist-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 4px;
+}
+
+.sl-dash-card-artist {
+  font-size: 11px;
+  color: #9f91b3;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  flex: 1;
+}
+
+.sl-dash-card-heart {
+  background: transparent;
+  border: none;
+  padding: 0;
+  color: #9f91b3;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  transition: transform 0.2s ease, color 0.2s ease;
+}
+
+.sl-dash-card-heart:hover {
+  transform: scale(1.2);
+  color: #ff2a85;
+}
+
+/* HOT & TRENDING CONTAINER (BOX) */
+.sl-dash-box-container {
+  background: rgba(22, 14, 38, 0.7);
+  border: 1px solid rgba(140, 80, 185, 0.35);
+  border-radius: 18px;
+  padding: 14px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.35);
+  min-height: 180px;
+  justify-content: center;
+}
+
+.sl-dash-list-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 4px 6px;
+  border-radius: 10px;
+  transition: background-color 0.2s ease;
+  cursor: pointer;
+}
+
+.sl-dash-list-row:hover {
+  background: rgba(157, 41, 237, 0.12);
+}
+
+.sl-dash-list-thumb {
+  width: 44px;
+  height: 44px;
+  border-radius: 8px;
+  overflow: hidden;
+  flex-shrink: 0;
+  background: #1e1230;
+  border: 1px solid rgba(140, 80, 185, 0.3);
+}
+
+.sl-dash-list-thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.sl-dash-list-meta {
+  flex: 1;
+  min-width: 0;
+}
+
+.sl-dash-list-title {
+  font-size: 13px;
+  font-weight: 700;
+  color: #ffffff;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin-bottom: 2px;
+}
+
+.sl-dash-list-sub {
+  font-size: 11px;
+  color: #9f91b3;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.sl-dash-circle-play {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #7928ca, #b818c8);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #ffffff;
+  cursor: pointer;
+  flex-shrink: 0;
+  box-shadow: 0 2px 8px rgba(184, 24, 200, 0.4);
+  transition: all 0.2s ease;
+}
+
+.sl-dash-circle-play:hover {
+  transform: scale(1.1);
+  box-shadow: 0 0 14px rgba(255, 36, 230, 0.65);
+}
+
+/* NUEVOS LANZAMIENTOS CARDS */
+.sl-dash-release-card {
+  flex: 0 0 126px;
+  width: 126px;
+  display: flex;
+  flex-direction: column;
+  cursor: pointer;
+  transition: transform 0.25s ease;
+}
+
+.sl-dash-release-card:hover {
+  transform: translateY(-4px);
+}
+
+.sl-dash-release-cover-box {
+  width: 126px;
+  height: 126px;
+  border-radius: 12px;
+  overflow: hidden;
+  position: relative;
+  background: #191026;
+  border: 1px solid rgba(140, 80, 185, 0.25);
+  margin-bottom: 8px;
+}
+
+.sl-dash-release-card:hover .sl-dash-cover-img {
+  transform: scale(1.05);
+}
+
+.sl-dash-release-info-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 6px;
+}
+
+.sl-dash-release-text {
+  flex: 1;
+  min-width: 0;
+}
+
+.sl-dash-mini-play {
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #9d29ed, #ff24e6);
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #ffffff;
+  cursor: pointer;
+  flex-shrink: 0;
+  box-shadow: 0 2px 8px rgba(255, 36, 230, 0.4);
+  transition: all 0.2s ease;
+}
+
+.sl-dash-mini-play:hover {
+  transform: scale(1.15);
+  box-shadow: 0 0 12px rgba(255, 36, 230, 0.8);
+}
+
+/* -------------------------------------------------------------
+   ROW 2: TWO COLUMNS (THIRD IS COMPLETELY ELIMINATED)
+   Made for You (wide cards) & Top daily playlists (box)
+   ------------------------------------------------------------- */
+.sl-dash-row-2 {
+  display: grid;
+  /* Retains the exact column widths matching Row 1 without expanding to occupy Col 3 */
+  grid-template-columns: 1.45fr 1.05fr;
+  max-width: calc(100% * (2.5 / 3.55));
+  gap: 22px;
+  align-items: start;
+}
+
+/* MADE FOR YOU: TWO PROMINENT FEATURED CARDS */
+.sl-dash-mfy-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+}
+
+.sl-dash-mfy-card {
+  position: relative;
+  height: 185px;
+  border-radius: 16px;
+  overflow: hidden;
+  cursor: pointer;
+  border: 1px solid rgba(140, 80, 185, 0.35);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.45);
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: 14px;
+}
+
+.sl-dash-mfy-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 10px 24px rgba(182, 61, 255, 0.35);
+  border-color: rgba(255, 36, 230, 0.5);
+}
+
+.sl-dash-mfy-bg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  object-fit: cover;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+}
+
+.sl-dash-mfy-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(to top, rgba(10, 6, 18, 0.95) 0%, rgba(15, 8, 25, 0.55) 50%, rgba(20, 10, 35, 0.2) 100%);
+  z-index: 2;
+}
+
+.sl-dash-mfy-content {
+  position: relative;
+  z-index: 3;
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.sl-dash-mfy-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.sl-dash-mfy-title {
+  font-size: 15px;
+  font-weight: 800;
+  color: #ffffff;
+  margin-bottom: 3px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.7);
+}
+
+.sl-dash-mfy-desc {
+  font-size: 11.5px;
+  color: #d1c5e2;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.7);
+}
+
+/* -------------------------------------------------------------
+   RESPONSIVE BREAKPOINTS (DESKTOP TO LAPTOP/TABLET)
+   ------------------------------------------------------------- */
+@media (max-width: 1200px) {
+  .sl-dash-row-1 {
+    grid-template-columns: 1fr 1fr;
+  }
+  .sl-dash-row-2 {
+    grid-template-columns: 1fr 1fr;
+    max-width: 100%;
+  }
+}
+
+@media (max-width: 900px) {
+  .sl-dash-main {
+    padding: 16px 20px 80px 20px;
+  }
+  .sl-dash-banner {
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 20px;
+  }
+  .sl-dash-banner-art-wrap {
+    display: none;
+  }
+  .sl-dash-row-1 {
+    grid-template-columns: 1fr;
+  }
+  .sl-dash-row-2 {
+    grid-template-columns: 1fr;
+    max-width: 100%;
+  }
+}

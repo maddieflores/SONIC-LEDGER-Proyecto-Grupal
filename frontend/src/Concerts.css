@@ -1,0 +1,857 @@
+/* Sonic Ledger — Conciertos Públicos (CU18) */
+
+.concerts-page {
+  min-height: 100vh;
+  background: #080511;
+  color: #f1ecf7;
+  font-family: inherit;
+  padding-bottom: 90px;
+}
+
+.concerts-shell {
+  max-width: 1240px;
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+/* Header */
+.concerts-header {
+  position: sticky;
+  top: 0;
+  z-index: 40;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 28px;
+  background: rgba(8, 5, 17, 0.92);
+  backdrop-filter: blur(16px);
+  border-bottom: 1px solid rgba(139, 92, 246, 0.18);
+}
+
+.concerts-brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  text-decoration: none;
+  color: #fff;
+  font-size: 1.25rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+.concerts-brand-mark {
+  display: grid;
+  place-items: center;
+  width: 38px;
+  height: 38px;
+  border-radius: 10px;
+  background: linear-gradient(135deg, #a855f7 0%, #ec4899 100%);
+  color: #fff;
+  box-shadow: 0 0 18px rgba(236, 72, 153, 0.4);
+}
+
+.concerts-brand span span {
+  color: #c084fc;
+}
+
+.concerts-nav {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.concerts-nav-link {
+  color: #cdbedb;
+  text-decoration: none;
+  font-size: 0.95rem;
+  font-weight: 500;
+  padding: 8px 14px;
+  border-radius: 9999px;
+  transition: all 0.2s ease;
+}
+
+.concerts-nav-link:hover,
+.concerts-nav-link.active {
+  color: #fff;
+  background: rgba(168, 85, 247, 0.15);
+  box-shadow: 0 0 12px rgba(168, 85, 247, 0.25);
+}
+
+.concerts-user-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.btn-organizer-panel {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 18px;
+  border-radius: 9999px;
+  background: linear-gradient(135deg, rgba(236, 72, 153, 0.2) 0%, rgba(139, 92, 246, 0.3) 100%);
+  border: 1px solid rgba(236, 72, 153, 0.4);
+  color: #f472b6;
+  text-decoration: none;
+  font-size: 0.88rem;
+  font-weight: 600;
+  transition: all 0.2s;
+}
+
+.btn-organizer-panel:hover {
+  background: linear-gradient(135deg, rgba(236, 72, 153, 0.35) 0%, rgba(139, 92, 246, 0.5) 100%);
+  border-color: #ec4899;
+  color: #fff;
+  box-shadow: 0 0 16px rgba(236, 72, 153, 0.5);
+}
+
+.btn-auth-link {
+  padding: 8px 18px;
+  border-radius: 9999px;
+  background: #a855f7;
+  color: #fff;
+  text-decoration: none;
+  font-size: 0.88rem;
+  font-weight: 600;
+  transition: all 0.2s;
+}
+
+.btn-auth-link:hover {
+  background: #c084fc;
+  box-shadow: 0 0 16px rgba(192, 132, 252, 0.6);
+}
+
+/* Hero Banner */
+.concerts-hero {
+  position: relative;
+  padding: 48px 0 32px;
+  text-align: left;
+}
+
+.concerts-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 14px;
+  border-radius: 9999px;
+  background: rgba(236, 72, 153, 0.12);
+  border: 1px solid rgba(236, 72, 153, 0.35);
+  color: #f472b6;
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  margin-bottom: 16px;
+}
+
+.concerts-badge span {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #ec4899;
+  box-shadow: 0 0 8px #ec4899;
+}
+
+.concerts-hero-title {
+  font-size: 2.75rem;
+  font-weight: 800;
+  line-height: 1.15;
+  letter-spacing: -0.025em;
+  color: #fff;
+  margin: 0 0 12px;
+}
+
+.concerts-hero-title span {
+  background: linear-gradient(135deg, #f472b6 0%, #a855f7 50%, #38bdf8 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.concerts-hero-desc {
+  max-width: 650px;
+  color: #cdbedb;
+  font-size: 1.05rem;
+  line-height: 1.5;
+  margin: 0;
+}
+
+/* =========================================================
+   AJUSTE VISUAL CU18: Carrusel horizontal de conciertos
+   ========================================================= */
+.carousel-section {
+  margin: 28px 0 44px;
+  position: relative;
+}
+
+.carousel-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 18px;
+}
+
+.carousel-title-group h2 {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #fff;
+  margin: 0 0 4px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.carousel-title-group p {
+  color: #a797be;
+  font-size: 0.9rem;
+  margin: 0;
+}
+
+.carousel-controls {
+  display: flex;
+  gap: 8px;
+}
+
+.carousel-arrow {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: rgba(30, 20, 50, 0.8);
+  border: 1px solid rgba(168, 85, 247, 0.3);
+  color: #f1ecf7;
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.carousel-arrow:hover:not(:disabled) {
+  background: rgba(168, 85, 247, 0.35);
+  border-color: #a855f7;
+  color: #fff;
+  box-shadow: 0 0 14px rgba(168, 85, 247, 0.5);
+  transform: scale(1.05);
+}
+
+.carousel-arrow:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+}
+
+.carousel-track-wrapper {
+  overflow-x: auto;
+  scroll-behavior: smooth;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  padding: 8px 4px 18px;
+}
+
+.carousel-track-wrapper::-webkit-scrollbar {
+  display: none;
+}
+
+.carousel-track {
+  display: flex;
+  gap: 20px;
+}
+
+.carousel-card {
+  flex: 0 0 320px;
+  background: #120c24;
+  border: 1px solid rgba(139, 92, 246, 0.22);
+  border-radius: 16px;
+  overflow: hidden;
+  text-decoration: none;
+  color: inherit;
+  display: flex;
+  flex-direction: column;
+  transition: all 0.25s ease;
+  position: relative;
+}
+
+.carousel-card:hover {
+  transform: translateY(-6px);
+  border-color: rgba(236, 72, 153, 0.6);
+  box-shadow: 0 12px 28px rgba(236, 72, 153, 0.2), 0 0 20px rgba(168, 85, 247, 0.25);
+}
+
+.carousel-card-cover {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  background: #1c1433;
+  overflow: hidden;
+}
+
+.carousel-card-cover img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.4s ease;
+}
+
+.carousel-card:hover .carousel-card-cover img {
+  transform: scale(1.05);
+}
+
+.carousel-card-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(0, 0, 0, 0.1) 0%, rgba(18, 12, 36, 0.95) 100%);
+}
+
+.carousel-badge-featured {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 4px 10px;
+  border-radius: 9999px;
+  background: rgba(236, 72, 153, 0.85);
+  color: #fff;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  backdrop-filter: blur(8px);
+}
+
+.carousel-badge-city {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 10px;
+  border-radius: 9999px;
+  background: rgba(14, 10, 26, 0.75);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  color: #e2d9f3;
+  font-size: 0.75rem;
+  font-weight: 600;
+  backdrop-filter: blur(8px);
+}
+
+.carousel-card-body {
+  padding: 16px 18px 20px;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+.carousel-card-date {
+  color: #f472b6;
+  font-size: 0.82rem;
+  font-weight: 600;
+  margin-bottom: 6px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.carousel-card-title {
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: #fff;
+  margin: 0 0 8px;
+  line-height: 1.3;
+}
+
+.carousel-card-venue {
+  color: #a797be;
+  font-size: 0.85rem;
+  margin-bottom: 14px;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.carousel-card-footer {
+  margin-top: auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-top: 12px;
+  border-top: 1px solid rgba(139, 92, 246, 0.15);
+}
+
+.carousel-price {
+  font-size: 0.82rem;
+  color: #cdbedb;
+}
+
+.carousel-price strong {
+  font-size: 1.05rem;
+  color: #38bdf8;
+  display: block;
+}
+
+.carousel-action-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 14px;
+  border-radius: 9999px;
+  background: rgba(168, 85, 247, 0.15);
+  border: 1px solid rgba(168, 85, 247, 0.4);
+  color: #c084fc;
+  font-size: 0.82rem;
+  font-weight: 600;
+  transition: all 0.2s;
+}
+
+.carousel-card:hover .carousel-action-btn {
+  background: #a855f7;
+  border-color: #a855f7;
+  color: #fff;
+  box-shadow: 0 0 12px rgba(168, 85, 247, 0.5);
+}
+
+/* =========================================================
+   Catálogo y Filtros
+   ========================================================= */
+.catalog-section {
+  margin-top: 36px;
+}
+
+.catalog-search-bar {
+  display: grid;
+  grid-template-columns: 1fr auto auto;
+  gap: 12px;
+  margin-bottom: 24px;
+  background: #120c24;
+  padding: 14px;
+  border-radius: 16px;
+  border: 1px solid rgba(139, 92, 246, 0.22);
+}
+
+.search-input-box {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: rgba(8, 5, 17, 0.8);
+  border: 1px solid rgba(139, 92, 246, 0.25);
+  border-radius: 10px;
+  padding: 0 14px;
+  color: #cdbedb;
+}
+
+.search-input-box:focus-within {
+  border-color: #a855f7;
+  box-shadow: 0 0 12px rgba(168, 85, 247, 0.3);
+}
+
+.search-input-box input {
+  width: 100%;
+  background: transparent;
+  border: none;
+  outline: none;
+  color: #fff;
+  font-size: 0.95rem;
+  padding: 10px 0;
+}
+
+.search-select {
+  background: rgba(8, 5, 17, 0.8);
+  border: 1px solid rgba(139, 92, 246, 0.25);
+  color: #f1ecf7;
+  border-radius: 10px;
+  padding: 10px 14px;
+  font-size: 0.9rem;
+  outline: none;
+  cursor: pointer;
+}
+
+.search-select:focus {
+  border-color: #a855f7;
+}
+
+/* Grid de Conciertos */
+.concerts-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 24px;
+  margin-bottom: 36px;
+}
+
+.concert-grid-card {
+  background: #120c24;
+  border: 1px solid rgba(139, 92, 246, 0.18);
+  border-radius: 16px;
+  overflow: hidden;
+  text-decoration: none;
+  color: inherit;
+  display: flex;
+  flex-direction: column;
+  transition: all 0.22s ease;
+}
+
+.concert-grid-card:hover {
+  transform: translateY(-4px);
+  border-color: rgba(168, 85, 247, 0.5);
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.5), 0 0 18px rgba(168, 85, 247, 0.2);
+}
+
+.concert-grid-cover {
+  width: 100%;
+  aspect-ratio: 16 / 10;
+  background: #1c1433;
+  position: relative;
+  overflow: hidden;
+}
+
+.concert-grid-cover img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.concert-status-badge {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  padding: 4px 10px;
+  border-radius: 9999px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  backdrop-filter: blur(8px);
+}
+
+.concert-status-badge.venta-disponible {
+  background: rgba(34, 197, 94, 0.85);
+  color: #fff;
+  box-shadow: 0 0 10px rgba(34, 197, 94, 0.5);
+}
+
+.concert-status-badge.venta-pendiente {
+  background: rgba(234, 179, 8, 0.85);
+  color: #120c24;
+  box-shadow: 0 0 10px rgba(234, 179, 8, 0.4);
+}
+
+.concert-status-badge.venta-cerrada {
+  background: rgba(100, 116, 139, 0.85);
+  color: #fff;
+}
+
+.concert-grid-body {
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+.concert-grid-date {
+  color: #f472b6;
+  font-size: 0.82rem;
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+
+.concert-grid-title {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #fff;
+  margin: 0 0 6px;
+  line-height: 1.3;
+}
+
+.concert-grid-location {
+  color: #a797be;
+  font-size: 0.85rem;
+  margin-bottom: 14px;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.concert-grid-footer {
+  margin-top: auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-top: 12px;
+  border-top: 1px solid rgba(139, 92, 246, 0.15);
+}
+
+.concert-grid-price {
+  font-size: 0.8rem;
+  color: #cdbedb;
+}
+
+.concert-grid-price strong {
+  font-size: 1rem;
+  color: #38bdf8;
+  display: block;
+}
+
+.btn-view-details {
+  padding: 6px 14px;
+  border-radius: 9999px;
+  background: rgba(168, 85, 247, 0.15);
+  border: 1px solid rgba(168, 85, 247, 0.4);
+  color: #c084fc;
+  font-size: 0.82rem;
+  font-weight: 600;
+  transition: all 0.2s;
+}
+
+.concert-grid-card:hover .btn-view-details {
+  background: #a855f7;
+  border-color: #a855f7;
+  color: #fff;
+  box-shadow: 0 0 10px rgba(168, 85, 247, 0.5);
+}
+
+/* Empty State */
+.empty-state {
+  text-align: center;
+  padding: 64px 20px;
+  background: #120c24;
+  border-radius: 16px;
+  border: 1px dashed rgba(139, 92, 246, 0.3);
+  margin: 20px 0;
+}
+
+.empty-state-icon {
+  width: 56px;
+  height: 56px;
+  margin: 0 auto 16px;
+  border-radius: 50%;
+  background: rgba(168, 85, 247, 0.12);
+  display: grid;
+  place-items: center;
+  color: #c084fc;
+}
+
+.empty-state h3 {
+  font-size: 1.25rem;
+  color: #fff;
+  margin: 0 0 8px;
+}
+
+.empty-state p {
+  color: #a797be;
+  max-width: 420px;
+  margin: 0 auto;
+  font-size: 0.92rem;
+}
+
+/* Pagination */
+.pagination-row {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 16px;
+  margin-top: 24px;
+}
+
+.btn-pagination {
+  padding: 8px 18px;
+  border-radius: 9999px;
+  background: #120c24;
+  border: 1px solid rgba(168, 85, 247, 0.3);
+  color: #f1ecf7;
+  font-size: 0.88rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.btn-pagination:hover:not(:disabled) {
+  background: rgba(168, 85, 247, 0.2);
+  border-color: #a855f7;
+  color: #fff;
+}
+
+.btn-pagination:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+@media (max-width: 768px) {
+  .catalog-search-bar {
+    grid-template-columns: 1fr;
+  }
+  .carousel-card {
+    flex: 0 0 260px;
+  }
+  .concerts-hero-title {
+    font-size: 2rem;
+  }
+}
+
+/* CU19 — Sección Conciertos Para Ti */
+.recommendations-section {
+  margin: 36px 0 20px;
+  position: relative;
+}
+
+.recommendations-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  margin-bottom: 18px;
+}
+
+.recommendations-title-group h2 {
+  font-size: 1.55rem;
+  font-weight: 800;
+  color: #fff;
+  margin: 0 0 6px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.recommendations-title-group p {
+  color: #cdbedb;
+  margin: 0;
+  font-size: 0.92rem;
+}
+
+.recommendations-track-wrapper {
+  overflow-x: auto;
+  padding-bottom: 14px;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(168, 85, 247, 0.4) transparent;
+}
+
+.recommendations-track-wrapper::-webkit-scrollbar {
+  height: 6px;
+}
+
+.recommendations-track-wrapper::-webkit-scrollbar-thumb {
+  background: rgba(168, 85, 247, 0.4);
+  border-radius: 9999px;
+}
+
+.recommendations-track {
+  display: flex;
+  gap: 20px;
+}
+
+.recommendation-card {
+  flex: 0 0 320px;
+  background: #120c24;
+  border: 1px solid rgba(168, 85, 247, 0.25);
+  border-radius: 18px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  transition: all 0.25s ease;
+  position: relative;
+}
+
+.recommendation-card:hover {
+  transform: translateY(-4px);
+  border-color: rgba(236, 72, 153, 0.5);
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.6), 0 0 20px rgba(168, 85, 247, 0.25);
+}
+
+.recommendation-cover-box {
+  position: relative;
+  height: 160px;
+  background: #080511;
+}
+
+.recommendation-cover-box img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.recommendation-reason-chip {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  right: 10px;
+  background: rgba(18, 12, 36, 0.88);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(168, 85, 247, 0.4);
+  color: #f1ecf7;
+  padding: 5px 10px;
+  border-radius: 9999px;
+  font-size: 0.76rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+}
+
+.recommendation-body {
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+.recommendation-title {
+  color: #fff;
+  font-size: 1.15rem;
+  font-weight: 800;
+  margin: 0 0 6px;
+  line-height: 1.3;
+}
+
+.recommendation-artists {
+  color: #c084fc;
+  font-size: 0.84rem;
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+
+.recommendation-meta {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: #cdbedb;
+  font-size: 0.82rem;
+  margin-bottom: 4px;
+}
+
+.recommendation-footer {
+  margin-top: auto;
+  padding-top: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-top: 1px solid rgba(139, 92, 246, 0.15);
+}
+
+.recommendation-price {
+  color: #fff;
+  font-size: 0.88rem;
+}
+
+.recommendation-price strong {
+  color: #38bdf8;
+  font-weight: 800;
+}
+
+.btn-view-recommendation {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: linear-gradient(135deg, #a855f7 0%, #ec4899 100%);
+  color: #fff;
+  padding: 7px 14px;
+  border-radius: 9999px;
+  font-size: 0.82rem;
+  font-weight: 700;
+  text-decoration: none;
+  transition: all 0.2s;
+}
+
+.btn-view-recommendation:hover {
+  box-shadow: 0 0 14px rgba(236, 72, 153, 0.5);
+  transform: scale(1.03);
+}

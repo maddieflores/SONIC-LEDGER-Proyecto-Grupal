@@ -1,0 +1,26 @@
+name: sonic-ledger
+services:
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: sonic_ledger
+      POSTGRES_USER: sonic
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?Configura database/.env}
+    ports:
+      - "127.0.0.1:5433:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U sonic -d sonic_ledger"]
+      interval: 5s
+      timeout: 5s
+      retries: 12
+  ollama:
+    image: ollama/ollama:latest
+    ports:
+      - "127.0.0.1:11435:11434"
+    volumes:
+      - ollama_data:/root/.ollama
+volumes:
+  postgres_data:
+  ollama_data:

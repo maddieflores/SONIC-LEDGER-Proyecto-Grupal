@@ -1,0 +1,213 @@
+/* Sonic Ledger — Mis Entradas (CU21) */
+
+.my-tickets-page {
+  min-height: 100vh;
+  background: #080511;
+  color: #f1ecf7;
+  padding-bottom: 90px;
+}
+
+.tickets-header-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 32px;
+}
+
+.tickets-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 24px;
+}
+
+.ticket-digital-card {
+  background: #120c24;
+  border: 1px solid rgba(139, 92, 246, 0.25);
+  border-radius: 18px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  transition: all 0.22s ease;
+  position: relative;
+}
+
+.ticket-digital-card:hover {
+  border-color: rgba(236, 72, 153, 0.6);
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.5), 0 0 20px rgba(236, 72, 153, 0.2);
+}
+
+.ticket-cover-header {
+  height: 140px;
+  width: 100%;
+  position: relative;
+  background: #1a1130;
+}
+
+.ticket-cover-header img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.ticket-status-pill {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  padding: 4px 10px;
+  border-radius: 9999px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  backdrop-filter: blur(8px);
+}
+
+.ticket-status-pill.vigente {
+  background: rgba(34, 197, 94, 0.85);
+  color: #fff;
+  box-shadow: 0 0 10px rgba(34, 197, 94, 0.4);
+}
+
+.ticket-status-pill.utilizado {
+  background: rgba(100, 116, 139, 0.85);
+  color: #fff;
+}
+
+.ticket-status-pill.invalidado {
+  background: rgba(239, 68, 68, 0.85);
+  color: #fff;
+}
+
+.ticket-card-content {
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+.ticket-code-tag {
+  color: #c084fc;
+  font-size: 0.82rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  margin-bottom: 4px;
+}
+
+.ticket-event-title {
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: #fff;
+  margin: 0 0 8px;
+  line-height: 1.3;
+}
+
+.ticket-info-line {
+  color: #cdbedb;
+  font-size: 0.85rem;
+  margin-bottom: 4px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.ticket-category-box {
+  margin: 12px 0;
+  padding: 8px 12px;
+  border-radius: 10px;
+  background: rgba(8, 5, 17, 0.6);
+  border: 1px solid rgba(139, 92, 246, 0.15);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.ticket-category-name {
+  color: #fff;
+  font-weight: 700;
+  font-size: 0.9rem;
+}
+
+.ticket-category-price {
+  color: #38bdf8;
+  font-weight: 800;
+  font-size: 0.95rem;
+}
+
+.btn-show-qr {
+  width: 100%;
+  padding: 10px;
+  border-radius: 10px;
+  background: linear-gradient(135deg, rgba(168, 85, 247, 0.25) 0%, rgba(236, 72, 153, 0.25) 100%);
+  border: 1px solid rgba(168, 85, 247, 0.4);
+  color: #fff;
+  font-size: 0.9rem;
+  font-weight: 700;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: all 0.2s;
+  margin-top: auto;
+}
+
+.btn-show-qr:hover {
+  background: linear-gradient(135deg, #a855f7 0%, #ec4899 100%);
+  box-shadow: 0 0 16px rgba(236, 72, 153, 0.5);
+}
+
+/* Modal QR */
+.qr-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.85);
+  backdrop-filter: blur(12px);
+  z-index: 100;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+}
+
+.qr-modal-ticket {
+  background: #0f0a1d;
+  border: 1px solid rgba(168, 85, 247, 0.4);
+  border-radius: 24px;
+  width: 100%;
+  max-width: 420px;
+  padding: 28px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.9), 0 0 40px rgba(168, 85, 247, 0.3);
+  position: relative;
+  text-align: center;
+}
+
+.qr-display-box {
+  background: #ffffff;
+  padding: 16px;
+  border-radius: 16px;
+  display: inline-block;
+  margin: 18px 0;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+}
+
+.qr-image-render {
+  width: 220px;
+  height: 220px;
+  display: block;
+}
+
+.qr-ticket-code {
+  font-family: monospace;
+  font-size: 1.15rem;
+  font-weight: 800;
+  color: #c084fc;
+  letter-spacing: 0.1em;
+  margin: 6px 0 12px;
+}
+
+.qr-warning-note {
+  color: #a797be;
+  font-size: 0.78rem;
+  line-height: 1.4;
+  margin-top: 14px;
+}

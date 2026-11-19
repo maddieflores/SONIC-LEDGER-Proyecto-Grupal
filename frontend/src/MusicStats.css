@@ -1,0 +1,378 @@
+/* Sonic Ledger — Mis Estadísticas Musicales (CU23) */
+
+.music-stats-page {
+  min-height: 100vh;
+  background: #080511;
+  color: #f1ecf7;
+  font-family: inherit;
+  padding-bottom: 90px;
+}
+
+.stats-page-shell {
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: 30px 24px 60px;
+}
+
+/* Header Area */
+.stats-header-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 20px;
+  margin-bottom: 28px;
+}
+
+.stats-title-group h1 {
+  font-size: 2.2rem;
+  font-weight: 900;
+  color: #fff;
+  margin: 8px 0 6px;
+  letter-spacing: -0.02em;
+}
+
+.stats-title-group h1 span {
+  background: linear-gradient(135deg, #a855f7 0%, #ec4899 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.stats-title-group p {
+  color: #cdbedb;
+  margin: 0;
+  font-size: 0.95rem;
+}
+
+/* Period Selector */
+.period-selector {
+  display: inline-flex;
+  background: #120c24;
+  border: 1px solid rgba(168, 85, 247, 0.3);
+  padding: 4px;
+  border-radius: 9999px;
+  gap: 4px;
+}
+
+.period-pill {
+  padding: 8px 18px;
+  border-radius: 9999px;
+  border: none;
+  background: transparent;
+  color: #cdbedb;
+  font-size: 0.88rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.period-pill:hover {
+  color: #fff;
+}
+
+.period-pill.active {
+  background: linear-gradient(135deg, #a855f7 0%, #ec4899 100%);
+  color: #fff;
+  box-shadow: 0 0 14px rgba(168, 85, 247, 0.4);
+}
+
+/* KPI Cards Grid */
+.stats-kpi-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+  gap: 16px;
+  margin-bottom: 32px;
+}
+
+.kpi-card {
+  background: #120c24;
+  border: 1px solid rgba(139, 92, 246, 0.22);
+  border-radius: 18px;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  overflow: hidden;
+  transition: all 0.25s ease;
+}
+
+.kpi-card:hover {
+  border-color: rgba(168, 85, 247, 0.45);
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.5);
+  transform: translateY(-2px);
+}
+
+.kpi-icon-box {
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  background: rgba(168, 85, 247, 0.15);
+  color: #c084fc;
+  display: grid;
+  place-items: center;
+  margin-bottom: 12px;
+}
+
+.kpi-label {
+  color: #a797be;
+  font-size: 0.78rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 4px;
+}
+
+.kpi-value {
+  font-size: 1.85rem;
+  font-weight: 900;
+  color: #fff;
+  margin-bottom: 4px;
+}
+
+.kpi-sub {
+  color: #cdbedb;
+  font-size: 0.8rem;
+}
+
+/* Two Columns Layout */
+.stats-columns-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+  margin-bottom: 32px;
+}
+
+.stats-card-panel {
+  background: #120c24;
+  border: 1px solid rgba(139, 92, 246, 0.22);
+  border-radius: 20px;
+  padding: 24px;
+}
+
+.panel-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 18px;
+  border-bottom: 1px solid rgba(139, 92, 246, 0.15);
+  padding-bottom: 12px;
+}
+
+.panel-title {
+  color: #fff;
+  font-size: 1.15rem;
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0;
+}
+
+/* Top Tracks List */
+.ranking-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.ranking-item {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  background: rgba(8, 5, 17, 0.6);
+  border: 1px solid rgba(139, 92, 246, 0.12);
+  border-radius: 12px;
+  padding: 10px 14px;
+  transition: all 0.2s;
+}
+
+.ranking-item:hover {
+  background: rgba(168, 85, 247, 0.08);
+  border-color: rgba(168, 85, 247, 0.3);
+}
+
+.rank-badge {
+  font-size: 1.05rem;
+  font-weight: 900;
+  color: #c084fc;
+  width: 24px;
+  text-align: center;
+}
+
+.ranking-cover {
+  width: 44px;
+  height: 44px;
+  border-radius: 8px;
+  object-fit: cover;
+  background: #080511;
+}
+
+.ranking-cover-placeholder {
+  width: 44px;
+  height: 44px;
+  border-radius: 8px;
+  background: rgba(168, 85, 247, 0.15);
+  display: grid;
+  place-items: center;
+  color: #c084fc;
+}
+
+.ranking-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.ranking-title {
+  color: #fff;
+  font-size: 0.95rem;
+  font-weight: 700;
+  margin: 0 0 2px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.ranking-subtitle {
+  color: #cdbedb;
+  font-size: 0.82rem;
+  margin: 0;
+}
+
+.ranking-metric {
+  text-align: right;
+  color: #f1ecf7;
+  font-size: 0.88rem;
+  font-weight: 700;
+}
+
+.ranking-metric span {
+  display: block;
+  font-size: 0.75rem;
+  color: #a797be;
+  font-weight: 500;
+}
+
+/* Genres Progress Bars */
+.genre-row {
+  margin-bottom: 14px;
+}
+
+.genre-header {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.88rem;
+  margin-bottom: 6px;
+}
+
+.genre-header strong {
+  color: #fff;
+}
+
+.genre-header span {
+  color: #c084fc;
+  font-weight: 700;
+}
+
+.genre-bar-bg {
+  width: 100%;
+  height: 8px;
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 9999px;
+  overflow: hidden;
+}
+
+.genre-bar-fill {
+  height: 100%;
+  border-radius: 9999px;
+  background: linear-gradient(90deg, #a855f7 0%, #ec4899 100%);
+}
+
+/* Daily Activity Section */
+.activity-chart-panel {
+  background: #120c24;
+  border: 1px solid rgba(139, 92, 246, 0.22);
+  border-radius: 20px;
+  padding: 24px;
+  margin-top: 24px;
+}
+
+.activity-bars-container {
+  display: flex;
+  align-items: flex-end;
+  gap: 8px;
+  height: 160px;
+  padding: 20px 0 10px;
+  overflow-x: auto;
+}
+
+.activity-bar-col {
+  flex: 1;
+  min-width: 18px;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 6px;
+}
+
+.activity-bar-pillar {
+  width: 100%;
+  min-height: 4px;
+  border-radius: 6px 6px 0 0;
+  background: linear-gradient(180deg, #38bdf8 0%, #a855f7 100%);
+  transition: height 0.3s ease;
+  position: relative;
+}
+
+.activity-bar-col:hover .activity-bar-pillar {
+  background: linear-gradient(180deg, #ec4899 0%, #a855f7 100%);
+  box-shadow: 0 0 10px rgba(236, 72, 153, 0.6);
+}
+
+.activity-bar-label {
+  color: #a797be;
+  font-size: 0.72rem;
+  font-weight: 600;
+}
+
+/* Empty State */
+.stats-empty-box {
+  text-align: center;
+  padding: 80px 24px;
+  background: #120c24;
+  border: 1px dashed rgba(168, 85, 247, 0.35);
+  border-radius: 24px;
+  margin: 30px 0;
+}
+
+.stats-empty-icon {
+  width: 64px;
+  height: 64px;
+  margin: 0 auto 16px;
+  border-radius: 50%;
+  background: rgba(168, 85, 247, 0.15);
+  display: grid;
+  place-items: center;
+  color: #c084fc;
+}
+
+.btn-start-listening {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: linear-gradient(135deg, #a855f7 0%, #ec4899 100%);
+  color: #fff;
+  padding: 12px 24px;
+  border-radius: 12px;
+  font-weight: 700;
+  text-decoration: none;
+  margin-top: 18px;
+  box-shadow: 0 0 18px rgba(168, 85, 247, 0.35);
+}
+
+@media (max-width: 860px) {
+  .stats-columns-grid {
+    grid-template-columns: 1fr;
+  }
+}

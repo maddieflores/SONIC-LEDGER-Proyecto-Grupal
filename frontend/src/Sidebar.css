@@ -1,0 +1,445 @@
+/* ========================================================
+   SONIC LEDGER — DESPLAZABLE & RESPONSIVE SIDEBAR NAVIGATION
+   Expanded: 240px (Full height column, Brand + Menu, Image 3)
+   Collapsed: 68px (Full height column, Slim rail of centered icons, Image 4)
+   ======================================================== */
+
+.sl-sidebar {
+  width: 240px;
+  min-width: 240px;
+  max-width: 240px;
+  background: linear-gradient(180deg, #0e051e 0%, #080313 100%);
+  border-right: 1px solid rgba(224, 36, 255, 0.16);
+  display: flex;
+  flex-direction: column;
+  padding: 16px 12px 20px 12px;
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  overflow-y: auto;
+  overflow-x: hidden;
+  box-sizing: border-box;
+  z-index: 100;
+  flex-shrink: 0;
+  transition: width 0.25s cubic-bezier(0.4, 0, 0.2, 1),
+              min-width 0.25s cubic-bezier(0.4, 0, 0.2, 1),
+              max-width 0.25s cubic-bezier(0.4, 0, 0.2, 1),
+              padding 0.25s ease;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(168, 85, 247, 0.35) transparent;
+}
+
+.sl-sidebar::-webkit-scrollbar {
+  width: 4px;
+}
+.sl-sidebar::-webkit-scrollbar-track {
+  background: transparent;
+}
+.sl-sidebar::-webkit-scrollbar-thumb {
+  background: rgba(168, 85, 247, 0.35);
+  border-radius: 4px;
+}
+
+/* Header inside sidebar: Brand & Collapse toggle button */
+.sl-sidebar-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 4px 14px 4px;
+  margin-bottom: 8px;
+  border-bottom: 1px solid rgba(224, 36, 255, 0.12);
+  min-height: 44px;
+}
+
+.sl-sidebar-brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  text-decoration: none;
+  color: #ffffff;
+}
+
+.sl-sidebar-brand-mark {
+  width: 34px;
+  height: 34px;
+  display: grid;
+  place-items: center;
+  background: linear-gradient(135deg, #9d29ed, #e024ff);
+  border-radius: 10px;
+  color: #fff;
+  box-shadow: 0 0 14px rgba(224, 36, 255, 0.4);
+}
+
+.sl-sidebar-brand-text {
+  font-size: 18px;
+  font-weight: 700;
+  letter-spacing: -0.5px;
+  display: flex;
+  align-items: baseline;
+}
+
+.sl-sidebar-brand-text span {
+  font-weight: 300;
+  color: #e2d2f7;
+}
+
+.sl-sidebar-brand-text i {
+  color: #e024ff;
+  font-style: normal;
+}
+
+.sl-sidebar-collapse-btn {
+  display: grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  background: rgba(36, 17, 55, 0.6);
+  border: 1px solid rgba(168, 85, 247, 0.25);
+  color: #baa4d4;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  flex-shrink: 0;
+}
+
+.sl-sidebar-collapse-btn:hover {
+  background: rgba(224, 36, 255, 0.2);
+  border-color: #e024ff;
+  color: #ffffff;
+  transform: scale(1.05);
+}
+
+/* Nav sections & items */
+.sl-sidebar-nav {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  flex: 1;
+}
+
+.sl-nav-section-title {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 8px 4px 8px;
+  color: #8c7b9e;
+  font-size: 10.5px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  transition: all 0.2s ease;
+}
+
+.sl-nav-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 12px;
+  border-radius: 12px;
+  color: #cfc2df;
+  text-decoration: none;
+  font-size: 13.5px;
+  font-weight: 500;
+  transition: all 0.18s ease;
+  background: transparent;
+  border: 1px solid transparent;
+  width: 100%;
+  text-align: left;
+  cursor: pointer;
+  box-sizing: border-box;
+  white-space: nowrap;
+}
+
+.sl-nav-item svg {
+  flex-shrink: 0;
+  color: #baa4d4;
+  transition: color 0.18s ease;
+}
+
+.sl-nav-item:hover {
+  color: #ffffff;
+  background: rgba(255, 255, 255, 0.06);
+  border-color: rgba(168, 85, 247, 0.22);
+}
+
+.sl-nav-item:hover svg {
+  color: #00f0ff;
+}
+
+.sl-nav-item.active,
+.sl-nav-item[aria-current="page"] {
+  background: linear-gradient(90deg, #9d29ed 0%, #d414a8 100%);
+  color: #ffffff;
+  font-weight: 600;
+  box-shadow: 0 0 18px rgba(212, 20, 168, 0.45);
+  border-color: transparent;
+}
+
+.sl-nav-item.active svg,
+.sl-nav-item[aria-current="page"] svg {
+  color: #ffffff;
+}
+
+.sl-nav-plus-btn {
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(168, 85, 247, 0.3);
+  border-radius: 50%;
+  width: 20px;
+  height: 20px;
+  display: grid;
+  place-items: center;
+  color: #f3ecff;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.sl-nav-plus-btn:hover {
+  background: #e024ff;
+  border-color: #e024ff;
+  color: #fff;
+  transform: scale(1.1);
+}
+
+/* Sidebar Footer Art & Logout */
+.sl-sidebar-footer {
+  margin-top: auto;
+  padding-top: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.sl-sidebar-art-container {
+  position: relative;
+  border-radius: 14px;
+  overflow: hidden;
+  background: radial-gradient(circle at center, rgba(157, 41, 237, 0.25) 0%, rgba(10, 5, 22, 0.7) 80%);
+  border: 1px solid rgba(224, 36, 255, 0.2);
+  padding: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.sl-sidebar-art-container img {
+  width: 100%;
+  height: 95px;
+  object-fit: contain;
+  filter: drop-shadow(0 0 14px rgba(224, 36, 255, 0.6));
+  animation: slSubtleFloat 6s ease-in-out infinite;
+}
+
+@keyframes slSubtleFloat {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-4px); }
+}
+
+.sl-sidebar-logout-btn {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 9px 12px;
+  border-radius: 12px;
+  background: rgba(26, 12, 46, 0.5);
+  border: 1px solid rgba(255, 45, 106, 0.25);
+  color: #f87171;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.sl-sidebar-logout-btn:hover {
+  background: rgba(255, 45, 106, 0.18);
+  border-color: #ff2d6a;
+  color: #ffffff;
+}
+
+/* ========================================================
+   DESKTOP COLLAPSED STATE (Image 4): Slim Rail of Icons
+   ======================================================== */
+.sl-sidebar.is-collapsed {
+  width: 68px;
+  min-width: 68px;
+  max-width: 68px;
+  padding: 16px 8px 18px 8px;
+  margin-left: 0;
+  opacity: 1;
+  pointer-events: auto;
+  border-right: 1px solid rgba(224, 36, 255, 0.16);
+}
+
+.sl-sidebar.is-collapsed .sl-sidebar-header {
+  justify-content: center;
+  padding: 0 0 12px 0;
+}
+
+.sl-sidebar.is-collapsed .sl-sidebar-brand {
+  display: none;
+}
+
+.sl-sidebar.is-collapsed .sl-sidebar-collapse-btn {
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+}
+
+.sl-sidebar.is-collapsed .sl-nav-section-title {
+  height: 1px;
+  padding: 0;
+  margin: 8px 4px;
+  background: rgba(224, 36, 255, 0.14);
+  font-size: 0;
+  overflow: hidden;
+  border: none;
+}
+
+.sl-sidebar.is-collapsed .sl-nav-section-title span,
+.sl-sidebar.is-collapsed .sl-nav-plus-btn {
+  display: none;
+}
+
+.sl-sidebar.is-collapsed .sl-nav-item {
+  width: 44px;
+  height: 44px;
+  min-width: 44px;
+  min-height: 44px;
+  padding: 0;
+  margin: 3px auto;
+  justify-content: center;
+  border-radius: 12px;
+  gap: 0;
+}
+
+.sl-sidebar.is-collapsed .sl-nav-item span {
+  display: none;
+}
+
+.sl-sidebar.is-collapsed .sl-nav-item svg {
+  margin: 0;
+  width: 20px;
+  height: 20px;
+}
+
+.sl-sidebar.is-collapsed .sl-sidebar-art-container {
+  display: none;
+}
+
+.sl-sidebar.is-collapsed .sl-sidebar-logout-btn {
+  width: 44px;
+  height: 44px;
+  min-width: 44px;
+  min-height: 44px;
+  padding: 0;
+  margin: 0 auto;
+  justify-content: center;
+  border-radius: 12px;
+  gap: 0;
+}
+
+.sl-sidebar.is-collapsed .sl-sidebar-logout-btn span {
+  display: none;
+}
+
+/* ========================================================
+   DRAWER MODE (Mobile or Forced Drawer)
+   ======================================================== */
+.sl-sidebar.is-drawer {
+  position: fixed !important;
+  top: 0 !important;
+  left: 0 !important;
+  bottom: 0 !important;
+  width: 270px !important;
+  max-width: 84vw !important;
+  min-width: 270px !important;
+  height: 100vh !important;
+  z-index: 9999 !important;
+  transform: translateX(-100%) !important;
+  margin-left: 0 !important;
+  box-shadow: none !important;
+  opacity: 1 !important;
+  pointer-events: auto !important;
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1) !important;
+}
+
+.sl-sidebar.is-drawer.is-open {
+  transform: translateX(0) !important;
+  box-shadow: 12px 0 50px rgba(0, 0, 0, 0.85), 0 0 35px rgba(224, 36, 255, 0.25) !important;
+}
+
+.sl-sidebar.is-drawer.is-collapsed {
+  transform: translateX(-100%) !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+}
+
+/* Backdrop for mobile drawer */
+.sl-sidebar-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(5, 2, 12, 0.75);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  z-index: 9990;
+  animation: slFadeIn 0.25s ease-out;
+}
+
+@keyframes slFadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+/* Header Toggle Button: Hidden on desktop (since sidebar has its own button), visible on mobile */
+.sl-sidebar-toggle-btn {
+  display: none;
+}
+
+@media (max-width: 992px) {
+  .sl-sidebar-toggle-btn {
+    display: grid;
+    place-items: center;
+    width: 38px;
+    height: 38px;
+    border-radius: 10px;
+    background: rgba(36, 17, 55, 0.7);
+    border: 1px solid rgba(168, 85, 247, 0.3);
+    color: #baa4d4;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    flex-shrink: 0;
+  }
+
+  .sl-sidebar-toggle-btn:hover {
+    background: rgba(224, 36, 255, 0.22);
+    border-color: #e024ff;
+    color: #ffffff;
+  }
+
+  .sl-sidebar {
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    bottom: 0 !important;
+    height: 100vh !important;
+    z-index: 9999 !important;
+    width: 270px !important;
+    min-width: 270px !important;
+    max-width: 84vw !important;
+    transform: translateX(-100%);
+    box-shadow: none;
+    transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1) !important;
+  }
+
+  .sl-sidebar.is-open {
+    transform: translateX(0) !important;
+    box-shadow: 12px 0 50px rgba(0, 0, 0, 0.85), 0 0 35px rgba(224, 36, 255, 0.25) !important;
+  }
+
+  .sl-sidebar.is-collapsed {
+    transform: translateX(-100%) !important;
+    width: 270px !important;
+    min-width: 270px !important;
+  }
+}
