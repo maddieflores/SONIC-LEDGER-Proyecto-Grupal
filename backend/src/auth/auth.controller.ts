@@ -1,4 +1,4 @@
-import { Body, Controller, Get, HttpCode, Injectable, Post, Req, Res, UseGuards, UnauthorizedException } from '@nestjs/common';
+import { BadRequestException, Body, Controller, Get, HttpCode, Injectable, Post, Query, Req, Res, UseGuards, UnauthorizedException } from '@nestjs/common';
 
 import type { CanActivate, ExecutionContext } from '@nestjs/common';
 
@@ -22,12 +22,20 @@ export class JwtGuard implements CanActivate {
 
   const [scheme, bearer] = req.headers.authorization?.split(' ') ?? [];
   const cookie = req.headers.cookie?.split(';').map(v => v.trim()).find(v => v.startsWith('sonic_session='))?.slice('sonic_session='.length);
-  const token = scheme === 'Bearer' ? bearer : cookie;
-  if (!token) throw new UnauthorizedException();
+  const sessionToken = scheme === 'Bearer' ? bearer : cookie;
+  if (sessionToken) {
+    req.user = await this.auth.authenticate(sessionToken);
+    return true;
+  }
 
-  req.user = await this.auth.authenticate(token);
+  const ticket = typeof req.query?.ticket === 'string' ? req.query.ticket : undefined;
+  const trackId = typeof req.params?.id === 'string' ? req.params.id : undefined;
+  if (ticket && trackId) {
+    req.user = await this.auth.verifyStreamTicket(ticket, trackId);
+    return true;
+  }
 
-  return true;
+  throw new UnauthorizedException();
 
  }
 
@@ -48,6 +56,16 @@ export class AuthController {
  }
 
  @Get('me') @UseGuards(JwtGuard) me(@Req() req: AuthRequest) { return req.user; }
+
+ @Get('stream-ticket')
+ @UseGuards(JwtGuard)
+ async getStreamTicket(@Query('trackId') trackId: string, @Req() req: AuthRequest) {
+  if (!trackId || typeof trackId !== 'string') {
+   throw new BadRequestException('El identificador trackId es requerido');
+  }
+  const ticket = await this.auth.generateStreamTicket(req.user!.id, trackId);
+  return { ticket };
+ }
 
  @Post('logout') @HttpCode(200) logout(@Res({ passthrough: true }) res: Response) { res.clearCookie('sonic_session', { httpOnly: true, secure: process.env.NODE_ENV === 'production', sameSite: 'strict', path: '/api/auth' }); return { message: 'Elimina las credenciales del cliente. El JWT vence a la hora de emisión más 3600 segundos.' }; }
 

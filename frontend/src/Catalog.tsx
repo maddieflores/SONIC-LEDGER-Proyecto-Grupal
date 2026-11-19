@@ -45,8 +45,9 @@ import {
   checkFavorites,
 } from "../../shared/library-api";
 import { SonicSidebar } from "./components/SonicSidebar";
+import { getApiBaseUrl } from "./auth-api";
 import "./Catalog.css";
-const base = import.meta.env.VITE_API_URL || "http://localhost:3000/api";
+const base = getApiBaseUrl();
 function CatalogLayout({
   children,
   focus,

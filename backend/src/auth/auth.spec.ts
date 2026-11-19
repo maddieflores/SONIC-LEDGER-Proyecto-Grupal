@@ -205,4 +205,23 @@ describe('CU01 / CU02 HTTP y Modelo Multirrol (repository double)', () => {
       .expect(200);
     expect(allowedRes.body.ok).toBe(true);
   });
+
+  it('generates a short-lived stream ticket and restricts its scope', async () => {
+    await request(app.getHttpServer()).post('/auth/register').send(body).expect(201);
+    const login = await request(app.getHttpServer()).post('/auth/login').send({ email: body.email, password: body.password }).expect(200);
+    const token = login.body.accessToken;
+
+    await request(app.getHttpServer()).get('/auth/stream-ticket').set('Authorization', 'Bearer ' + token).expect(400);
+
+    const ticketRes = await request(app.getHttpServer())
+      .get('/auth/stream-ticket?trackId=audius:track123')
+      .set('Authorization', 'Bearer ' + token)
+      .expect(200);
+    expect(ticketRes.body.ticket).toBeDefined();
+
+    await request(app.getHttpServer())
+      .get('/auth/me')
+      .set('Authorization', 'Bearer ' + ticketRes.body.ticket)
+      .expect(401);
+  });
 });

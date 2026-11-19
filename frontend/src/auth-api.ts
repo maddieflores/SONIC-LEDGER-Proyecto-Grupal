@@ -1,4 +1,19 @@
-const BASE = (import.meta.env.VITE_API_URL || 'http://localhost:3000/api').replace(/\/+$/, '');
+export function getApiBaseUrl(): string {
+  let envUrl = (import.meta.env.VITE_API_URL || '').trim();
+  if (typeof window !== 'undefined' && window.location.hostname.includes('onrender.com') && (!envUrl || envUrl === '/api')) {
+    return 'https://sonic-ledger-api.onrender.com/api';
+  }
+  if (!envUrl || envUrl === '/api') {
+    return 'http://localhost:3000/api';
+  }
+  envUrl = envUrl.replace(/\/+$/, '');
+  if (!envUrl.endsWith('/api') && /^https?:\/\//i.test(envUrl)) {
+    envUrl = `${envUrl}/api`;
+  }
+  return envUrl;
+}
+
+const BASE = getApiBaseUrl();
 
 export class ApiError extends Error {
   status: number;

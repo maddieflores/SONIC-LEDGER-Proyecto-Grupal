@@ -46,8 +46,9 @@ import {
 } from '../../shared/history-api';
 import './UserLibrary.css';
 import './ArtistReleases.css';
+import { getApiBaseUrl } from './auth-api';
 
-const base = import.meta.env.VITE_API_URL || 'http://localhost:3000/api';
+const base = getApiBaseUrl();
 
 function formatSeconds(secs?: number | null): string {
   if (!secs) return '0:00';

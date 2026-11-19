@@ -31,10 +31,29 @@ export function playbackTime(value: number) {
   const n = Math.floor(value);
   return Math.floor(n / 60) + ":" + (n % 60).toString().padStart(2, "0");
 }
-export function publishedAudioUrl(base: string, id: string) {
-  if (/^audius:[a-zA-Z0-9]+$/.test(id)) return base + "/auth/integrations/audius/tracks/" + encodeURIComponent(id) + "/audio";
+export function publishedAudioUrl(base: string, id: string, ticket?: string) {
+  const query = ticket ? `?ticket=${encodeURIComponent(ticket)}` : "";
+  if (/^audius:[a-zA-Z0-9]+$/.test(id))
+    return base + "/auth/integrations/audius/tracks/" + encodeURIComponent(id) + "/audio" + query;
   if (!/^[a-f0-9-]{36}$/.test(id)) throw new Error("Canción inválida.");
-  return base + "/auth/catalog/" + id + "/audio";
+  return base + "/auth/catalog/" + id + "/audio" + query;
+}
+
+export async function fetchStreamTicket(base: string, trackId: string, token?: string): Promise<string | null> {
+  const activeToken = token ?? (typeof localStorage !== 'undefined' ? localStorage.getItem('token') ?? undefined : undefined);
+  if (!activeToken) return null;
+  try {
+    const res = await fetch(`${base}/auth/stream-ticket?trackId=${encodeURIComponent(trackId)}`, {
+      headers: {
+        Authorization: `Bearer ${activeToken}`,
+      },
+    });
+    if (!res.ok) return null;
+    const data = await res.json();
+    return typeof data.ticket === 'string' ? data.ticket : null;
+  } catch {
+    return null;
+  }
 }
 export type PublicArtist = {
   artist: {

@@ -34,9 +34,10 @@ import {
 } from '../../shared/library-api';
 import type { PlaylistSummary } from '../../shared/library';
 import type { Profile } from '../../shared/profile';
+import { getApiBaseUrl } from './auth-api';
 import './Dashboard.css';
 
-const base = import.meta.env.VITE_API_URL || 'http://localhost:3000/api';
+const base = getApiBaseUrl();
 
 export function Dashboard() {
   const navigate = useNavigate();

@@ -103,7 +103,10 @@ export class AuthService {
 
   async authenticate(token: string) {
     try {
-      const payload = await this.jwt.verifyAsync<{ sub: string; version?: number; roles?: string[] }>(token);
+      const payload = await this.jwt.verifyAsync<{ sub: string; version?: number; roles?: string[]; scope?: string }>(token);
+      if (payload.scope === 'stream') {
+        throw new UnauthorizedException('Token de streaming no válido para operaciones de cuenta');
+      }
       const user = await this.users.findOne({
         where: { id: payload.sub },
         relations: { roles: true },
@@ -114,8 +117,39 @@ export class AuthService {
       }
 
       return this.publicUser(user);
-    } catch {
+    } catch (e) {
+      if (e instanceof UnauthorizedException) throw e;
       throw new UnauthorizedException('Sesión inválida o expirada.');
+    }
+  }
+
+  async generateStreamTicket(userId: string, trackId: string): Promise<string> {
+    return this.jwt.signAsync(
+      {
+        sub: userId,
+        scope: 'stream',
+        trackId,
+      },
+      { expiresIn: '3m' },
+    );
+  }
+
+  async verifyStreamTicket(ticket: string, trackId: string) {
+    try {
+      const payload = await this.jwt.verifyAsync<{ sub: string; scope?: string; trackId?: string }>(ticket);
+      if (payload.scope !== 'stream' || payload.trackId !== trackId) {
+        throw new Error();
+      }
+      const user = await this.users.findOne({
+        where: { id: payload.sub },
+        relations: { roles: true },
+      });
+      if (!user) {
+        throw new Error();
+      }
+      return this.publicUser(user);
+    } catch {
+      throw new UnauthorizedException('Ticket de audio expirado o inválido');
     }
   }
 

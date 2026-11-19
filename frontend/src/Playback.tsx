@@ -19,6 +19,7 @@ import {
 import { catalogCoverUrl, type CatalogSong } from "../../shared/catalog";
 import {
   cycleRepeat,
+  fetchStreamTicket,
   nextIndex,
   playbackTime,
   publishedAudioUrl,
@@ -28,8 +29,9 @@ import {
 import { checkFavorites, toggleFavorite } from "../../shared/library-api";
 import { recordPlaybackEvent } from "../../shared/history-api";
 import { isValidPlayback } from "../../shared/history";
+import { getApiBaseUrl } from "./auth-api";
 import "./Playback.css";
-const base = import.meta.env.VITE_API_URL || "http://localhost:3000/api";
+const base = getApiBaseUrl();
 export function PlayerProvider({ children }: { children: React.ReactNode }) {
   const audio = useRef<HTMLAudioElement>(null),
     generation = useRef(0),
@@ -56,7 +58,7 @@ export function PlayerProvider({ children }: { children: React.ReactNode }) {
     [volume, setVolumeState] = useState(1);
   const location = useLocation();
   const song = queue[index] ?? null;
-  function begin(
+  async function begin(
     selected: CatalogSong,
     items: CatalogSong[],
     selectedIndex: number,
@@ -100,7 +102,17 @@ export function PlayerProvider({ children }: { children: React.ReactNode }) {
     setLoading(true);
     setPosition(0);
     setDuration(0);
-    element.src = publishedAudioUrl(base, selected.id);
+    let audioUrl = publishedAudioUrl(base, selected.id);
+    try {
+      const ticket = await fetchStreamTicket(base, selected.id);
+      if (ticket) {
+        audioUrl = publishedAudioUrl(base, selected.id, ticket);
+      }
+    } catch {
+      // Fallback a URL directa si no se pudo generar el ticket
+    }
+    if (version !== generation.current) return;
+    element.src = audioUrl;
     element.load();
     void element.play().catch((e) => {
       if (version !== generation.current || e.name === "AbortError") return;

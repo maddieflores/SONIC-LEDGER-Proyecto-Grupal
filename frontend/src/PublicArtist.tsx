@@ -18,7 +18,8 @@ import {
 import type { PublicArtist } from "../../shared/playback";
 import { usePlayback } from "./PlaybackContext";
 import { SongListItem } from "./Catalog";
-const base = import.meta.env.VITE_API_URL || "http://localhost:3000/api";
+import { getApiBaseUrl } from "./auth-api";
+const base = getApiBaseUrl();
 function artistImage(reference: string | null) {
   return reference &&
     /^\/api\/auth\/catalog\/artists\/[a-f0-9-]+\/media\/(avatar|cover)$/.test(
