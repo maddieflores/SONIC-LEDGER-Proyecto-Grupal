@@ -18,6 +18,18 @@ import type { EditDjDto, SaveDjDto } from './dj.dto.js';
 import { mergeConstraints, validateIntent } from './intent.js';
 import { groundIntent } from './ground-intent.js';
 import { selectDjTracks } from './dj-selector.js';
+const baseIntentCandidate = {
+  genres: null,
+  excludedGenres: null,
+  removeExcludedGenres: null,
+  activity: null,
+  mood: null,
+  favorites: null,
+  count: null,
+  action: 'select' as const,
+  unsupported: [],
+};
+
 @Injectable()
 export class DjService {
   constructor(
@@ -149,7 +161,7 @@ export class DjService {
       if (process.env.NODE_ENV === 'test') {
         throw err;
       }
-      const res = groundIntent(prompt, {});
+      const res = groundIntent(prompt, baseIntentCandidate);
       rawIntent = res.intent;
       fallback = true;
     }
@@ -204,7 +216,7 @@ export class DjService {
           if (process.env.NODE_ENV === 'test') {
             throw err;
           }
-          const res = groundIntent(dto.prompt, {});
+          const res = groundIntent(dto.prompt, baseIntentCandidate);
           rawIntent = res.intent;
         }
         const intent = validateIntent(rawIntent);

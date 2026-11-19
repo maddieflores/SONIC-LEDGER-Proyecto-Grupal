@@ -1,6 +1,6 @@
 import { beforeEach, afterEach, describe, expect, it, vi } from 'vitest';
 import type { Mock } from 'vitest';
-import { validateIntent, mergeConstraints } from './intent.js';
+import { validateIntent, mergeConstraints, genreKey } from './intent.js';
 import { selectDjTracks } from './dj-selector.js';
 import { groundIntent } from './ground-intent.js';
 import { emptyConstraints } from './dj.types.js';
@@ -586,5 +586,64 @@ describe('Validación de evidencia del DJ, separada del modelo', () => {
   });
   it('no acepta JSON inválido ni interpreta sin modelo', () => {
     expect(() => groundIntent('Rock', {})).toThrow('inválida');
+  });
+
+  describe('Pruebas requeridas — Generación, Audius, streaming, autenticación y restricciones', () => {
+    it('interpreta solicitud combinada con género, exclusión, actividad y mood', () => {
+      const res = groundIntent(
+        'Quiero rock energético para entrenar, sin música electrónica',
+        patch({ action: 'select' }),
+      );
+      expect(res.intent.genres?.map(genreKey)).toContain('rock');
+      expect(res.intent.excludedGenres?.map(genreKey)).toContain('electronic');
+      expect(res.intent.activity).toBe('entrenar');
+      expect(res.intent.mood).toBe('energetic');
+    });
+
+    it('selectDjTracks admite estado de ánimo cuando existen géneros concretos en restricciones', () => {
+      const poolWithGenres = [
+        song('s1', 'Rock'),
+        song('s2', 'Electrónica'),
+        song('s3', 'Pop'),
+      ];
+      const selected = selectDjTracks(poolWithGenres, {
+        ...emptyConstraints,
+        genres: ['Rock'],
+        excludedGenres: ['Electrónica'],
+        mood: 'energetic',
+      });
+      expect(selected.map((s) => s.id)).toEqual(['s1']);
+    });
+
+    it('rechaza pistas no reproducibles (error de streaming/playable)', () => {
+      const unplayableSong: ResolvedTrack = {
+        ...song('broken', 'Rock'),
+        playable: false,
+      };
+      const selected = selectDjTracks([unplayableSong], {
+        ...emptyConstraints,
+        genres: ['Rock'],
+      });
+      expect(selected).toHaveLength(0);
+    });
+
+    it('maneja ausencia total de candidatos sin romper el flujo', () => {
+      const selected = selectDjTracks([], {
+        ...emptyConstraints,
+        genres: ['Rock'],
+      });
+      expect(selected).toEqual([]);
+    });
+
+    it('integra candidatos externos de Audius identificados con prefijo o source', () => {
+      const audiusTrack = song('audius:track123', 'Rock', 'AUDIUS');
+      const selected = selectDjTracks([audiusTrack], {
+        ...emptyConstraints,
+        genres: ['Rock'],
+      });
+      expect(selected).toHaveLength(1);
+      expect(selected[0].source).toBe('AUDIUS');
+      expect(selected[0].id).toBe('audius:track123');
+    });
   });
 });

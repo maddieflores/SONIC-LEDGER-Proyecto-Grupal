@@ -8,7 +8,11 @@ export function selectDjTracks(
   constraints: DjConstraints,
   favorites: CatalogSong[] = [],
 ) {
-  if (constraints.mood && constraints.mood !== 'none')
+  if (
+    constraints.mood &&
+    constraints.mood !== 'none' &&
+    (!constraints.genres || constraints.genres.length === 0)
+  )
     throw new BadRequestException(
       'El catálogo no dispone de metadatos confiables de energía o calma. Reformula o quita explícitamente esa restricción.',
     );

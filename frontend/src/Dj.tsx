@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { usePlayback } from './PlaybackContext';
 import { djRequest, djChips, type DjState, type DjSong } from '../../shared/dj-api';
 import { resolveAuthToken } from '../../shared/api-config';
@@ -9,7 +9,6 @@ import './Dj.css';
 const base = import.meta.env.VITE_API_URL || 'http://localhost:3000/api';
 
 export function DjPage() {
-  const navigate = useNavigate();
   const player = usePlayback();
   const [token, setToken] = useState<string | undefined>(() => resolveAuthToken());
   const [session, setSession] = useState<DjState | null>(null), [sessions, setSessions] = useState<DjState[]>([]);
@@ -39,9 +38,7 @@ export function DjPage() {
         if (active) {
           const msg = e?.message || 'Error al conectar con el DJ';
           if (msg.toLowerCase().includes('unauthorized') || msg.toLowerCase().includes('no autorizado')) {
-            localStorage.removeItem('token');
-            setToken(undefined);
-            navigate('/iniciar-sesion?redirect=/dj');
+            setError('Sesión requerida: inicia sesión para ver o generar tus mezclas.');
           } else {
             setError(msg);
           }
@@ -68,9 +65,7 @@ export function DjPage() {
     } catch (e: any) {
       const msg = (e as Error).message;
       if (msg.toLowerCase().includes('unauthorized') || msg.toLowerCase().includes('no autorizado')) {
-        localStorage.removeItem('token');
-        setToken(undefined);
-        navigate('/iniciar-sesion?redirect=/dj');
+        setError('Sesión requerida: inicia sesión para interactuar con el DJ.');
       } else {
         setError(msg);
       }
